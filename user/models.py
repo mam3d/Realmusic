@@ -8,14 +8,14 @@ from django.contrib.auth.models import (
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, password, **kwargs):
+    def create(self, username, password, **kwargs):
         user = self.model(username=username, **kwargs)
         user.set_password(password)
         user.save()
         return user
     
     def create_superuser(self, username, password):
-        user = self.create_user(
+        user = self.create(
             username=username,
             password=password,
             is_staff=True,
