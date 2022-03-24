@@ -1,14 +1,17 @@
 
 from django.db import models
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import (
     AbstractBaseUser,
     PermissionsMixin,
     BaseUserManager,
 )
-
+from django.forms import ValidationError
 
 class UserManager(BaseUserManager):
     def create(self, username, password, **kwargs):
+        if len(password) < 8:
+            raise ValidationError("password is too short")
         user = self.model(username=username, **kwargs)
         user.set_password(password)
         user.save()
@@ -27,11 +30,24 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=30, unique=True)
+    email = models.EmailField(unique=True, null=True, blank=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     USERNAME_FIELD = "username"
 
     objects = UserManager()
 
+
+
+    def get_jwt_token(self):
+        refresh = RefreshToken.for_user(self)
+
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }
+
     def __str__(self):
+        if self.email:
+            return self.username
         return self.username

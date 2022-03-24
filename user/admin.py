@@ -4,5 +4,24 @@ from .models import User
 
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
-    list_display = ["username","is_staff","is_admin"]
+    list_display = ["username", "email", "is_staff", "is_admin"]
+    list_display_links = ('username', 'email')
     list_filter = ("is_staff", "is_superuser", "groups")
+    fieldsets = (
+        (None, {
+            "fields": (
+                "username",
+                "email",
+                "password",
+                "is_staff",
+                "is_admin",
+                "is_superuser",
+            ),
+        }),
+        ("Permissions", {
+            "fields": (
+                "groups",
+            ),
+        }),
+    )
+    

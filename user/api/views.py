@@ -1,3 +1,4 @@
+
 from rest_framework import (
     views,
     generics,
@@ -7,11 +8,17 @@ from rest_framework.response import Response
 from .serializers import (
     RegisterSerializer,
     LoginSerializer,
+    GoogleSerializer,
 )
 
 
 class UserRegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
+
+
+class GoogleLogin(generics.CreateAPIView):
+    serializer_class = GoogleSerializer
+
 
 class UserLoginView(views.APIView):
     def post(self, request):
