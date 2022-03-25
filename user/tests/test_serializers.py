@@ -1,6 +1,8 @@
-
+from unittest import mock
+from rest_framework.serializers import ValidationError
 from rest_framework.test import APITestCase
 from user.api.serializers import (
+    GoogleSerializer,
     RegisterSerializer,
     LoginSerializer
 )
@@ -48,3 +50,35 @@ class LoginSerializerTest(APITestCase):
         # user dosent exist
         serializer = LoginSerializer(data=self.data)
         self.assertEqual(serializer.is_valid(), False)
+
+
+class GoogleSerializerTest(APITestCase):
+
+    def setUp(self):
+        self.data = {
+            "token":"somerandomtokenfortest"
+        }
+        self.status_code = 200
+        
+    def get_mock(self, url, **kwargs):
+        response = mock.Mock()
+        response.status_code = self.status_code
+        response.json.return_value = {
+            "email":"test@gmail.com"
+        }
+        return response
+
+    @mock.patch("user.api.serializers.requests")
+    def test_valid(self, mock_requests):
+        mock_requests.get.side_effect = self.get_mock
+
+        serializer = GoogleSerializer(data=self.data) 
+        self.assertEqual(serializer.is_valid(), True)
+
+    @mock.patch("user.api.serializers.requests")
+    def test_not_valid(self, mock_requests):
+        self.status_code = 400
+        mock_requests.get.side_effect = self.get_mock
+        
+        serializer = GoogleSerializer(data=self.data)
+        self.assertFalse(serializer.is_valid())
