@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     
     # local
     'user.apps.UserConfig',
+    'artist.apps.ArtistConfig',
 
     # 3rd party
     'rest_framework',
