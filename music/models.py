@@ -32,15 +32,14 @@ class Subtitle(models.Model):
     file = models.FileField(blank=True, null=True, validators=[subtitle_validator])
     language = models.CharField(max_length=1, choices=CHOICES)
     
-    def save(self):
-        super().save() # File has to be saved inorder to read
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs) # File has to be saved inorder to read
 
         if self.file:
             with open(self.file.path, "r") as f:
                 self.text = f.read()
             self.file.delete()
-            
-        return super().save()
+            self.save(*args, **kwargs)    
 
     def __str__(self):
         return f"{self.song.name}'s subtitle"
