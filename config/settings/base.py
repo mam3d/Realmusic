@@ -71,7 +71,7 @@ DATABASES = {
         'NAME': config("DATABASE_NAME", cast=str),
         'USER': config("DATABASE_USER", cast=str),
         'PASSWORD': config("DATABASE_PASSWORD", cast=str),
-        'HOST': 'localhost',
+        'HOST': 'db',
     }
 }
 
@@ -123,5 +123,7 @@ AUTH_USER_MODEL = "user.User"
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.AcceptHeaderVersioning',
+    'DEFAULT_VERSION':'1.0',
 }

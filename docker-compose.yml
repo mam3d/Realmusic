@@ -1,0 +1,39 @@
+version: '3.7'
+services:
+  realmusic:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      network: host
+    command: python manage.py runserver 0.0.0.0:8000
+    env_file:
+      - .env
+    networks:
+      - realmusic
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/realmusic
+    depends_on:
+      - db
+    restart: on-failure
+    image: realmusic:latest
+    container_name: realmusic
+
+  db:
+    image: postgres
+    networks:
+      - realmusic
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+    restart: on-failure
+
+networks:
+  realmusic:
+volumes:
+  postgres_db:
+  
