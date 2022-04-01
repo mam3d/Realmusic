@@ -9,7 +9,7 @@ To run this project you must install Docker and Docker-compose
 ## Installation
 Clone the project
 ```sh
-  git clone 
+  git clone https://github.com/mam3d/Realmusic.git
 ```
 create .env file with following environment variables
 - SECRET_KEY
