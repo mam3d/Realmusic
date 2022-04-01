@@ -16,6 +16,7 @@ create .env file with following environment variables
 - DATABASE_NAME
 - DATABASE_USER
 - DATABASE_PASSWORD
+
 Run project
 ```sh
   docker-compose up -d
