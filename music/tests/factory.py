@@ -1,16 +1,9 @@
 from factory.django import DjangoModelFactory
-from artist.models import Artist
 from ..models import (
     Genre,
     Song,
     Album,
 )
-
-class ArtistFactory(DjangoModelFactory):
-    name = None
-
-    class Meta:
-        model = Artist
 
 class GenreFactory(DjangoModelFactory):
     name = None
@@ -27,5 +20,6 @@ class SongFactory(DjangoModelFactory):
 class AlbumFactory(DjangoModelFactory):
     name = None
     artist = None
+    genre = None
     class Meta:
         model = Album

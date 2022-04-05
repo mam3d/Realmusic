@@ -1,8 +1,8 @@
 from django.core.files import File
 from unittest import mock
 from django.test import TestCase
+from artist.tests.factory import ArtistFactory
 from.factory import (
-    ArtistFactory,
     GenreFactory,
     SongFactory,
     AlbumFactory,

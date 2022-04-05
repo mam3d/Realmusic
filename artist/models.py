@@ -11,7 +11,7 @@ class Artist(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
-        return super().save(self, *args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def get_songs(self):
         return self.songs.all()

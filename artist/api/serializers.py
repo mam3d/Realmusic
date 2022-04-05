@@ -5,6 +5,7 @@ from ..models import Artist
 
 class ArtistListSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="artist-detail",lookup_field="slug")
+    genre = serializers.StringRelatedField()
     class Meta:
         model = Artist
         fields = ["url","name","image", "genre"]
