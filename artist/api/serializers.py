@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from music.api.serializers import SongListSerializer
 from ..models import Artist
 
 
@@ -10,7 +11,15 @@ class ArtistListSerializer(serializers.ModelSerializer):
 
 
 class ArtistDetailSerializer(serializers.ModelSerializer):
-    albums = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    albums = serializers.HyperlinkedRelatedField(view_name="album-detail",
+                                                    many=True,
+                                                    read_only=True
+                                                    )
+    single_songs = serializers.SerializerMethodField()
     class Meta:
         model = Artist
-        fields = ["name","image", "albums"]
+        fields = ["name","image", "albums", "single_songs"]
+
+    def get_single_songs(self, obj):
+        serializer = SongListSerializer(obj.get_single_songs(),many=True,context=self.context)
+        return serializer.data

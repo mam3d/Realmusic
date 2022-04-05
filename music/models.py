@@ -37,7 +37,7 @@ class Song(models.Model):
                             on_delete=models.SET_NULL,
                             null=True, blank=True,
                             )
-    url = models.URLField()
+    download_url = models.URLField()
     genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)
 
 
@@ -50,7 +50,7 @@ class Subtitle(models.Model):
         ("P","Persian"),
         ("E","English"),
     )
-    song = models.ForeignKey(Song, on_delete=models.CASCADE, related_name="subtitle")
+    song = models.ForeignKey(Song, on_delete=models.CASCADE, related_name="subtitles")
     text = models.TextField(blank=True, null=True)
     file = models.FileField(blank=True, null=True, validators=[subtitle_validator])
     language = models.CharField(max_length=1, choices=CHOICES)

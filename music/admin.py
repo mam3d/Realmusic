@@ -14,7 +14,7 @@ class GenreAdmin(admin.ModelAdmin):
 
 @admin.register(Song)
 class SongAdmin(admin.ModelAdmin):
-    list_display = ["name","genre","url"]
+    list_display = ["name","genre","download_url"]
     list_filter = ["genre","artist"]
     raw_id_fields = ("artist",)
 
@@ -27,7 +27,7 @@ class SubtitleAdmin(admin.ModelAdmin):
 
 class SongInline(admin.TabularInline):
     model = Song
-    fields = ["name","artist","image","url","genre"]
+    fields = ["name","artist","image","download_url","genre"]
     raw_id_fields = ("artist",)
     extra = 0
 
