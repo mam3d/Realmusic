@@ -27,11 +27,13 @@ class SongTest(TestCase):
             genre = genre,
             image = image,
             album = album,
+            download_url = "t.com"
         )
         self.song.artist.add(artist)
     
     def test_created(self):
         self.assertEqual(self.song.name, "nf")
+        self.assertEqual(self.song.download_url, "t.com")
         artist = self.song.artist.all()[0]
         self.assertEqual(artist.name, "nf")
         self.assertEqual(self.song.album.name, "the search")

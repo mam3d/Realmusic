@@ -14,6 +14,8 @@ class GenreFactory(DjangoModelFactory):
 class SongFactory(DjangoModelFactory):
     name = None
     album = None
+    genre = None
+    download_url = "t.com"
     class Meta:
         model = Song
 
