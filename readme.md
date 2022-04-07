@@ -27,8 +27,9 @@ You have 2 containers running
 
 Create super user with realmusic container to access Django's Admin panel
 ```sh
-  docker-compose run realmusic python manage.py createsuper user
+  docker-compose run realmusic python manage.py createsuperuser
 ```
 [Admin panel endpoint](http://127.0.0.1:8000/admin)
+[Documantation endpoint](http://127.0.0.1:8000/api/doc)
 
 Now You are ready to use realmusic
