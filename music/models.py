@@ -3,8 +3,26 @@ from django.db import models
 from artist.models import Artist
 from utils.image import get_file_path
 from utils.validators import subtitle_validator
+
 class Genre(models.Model):
     name = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.name
+
+
+class Album(models.Model):
+    name = models.CharField(max_length=30)
+    image = models.ImageField(upload_to=get_file_path, default="media/music_cover/default.png")
+    artist = models.ForeignKey(Artist, related_name="albums", on_delete=models.CASCADE)
+    genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def get_songs(self):
+        return self.songs.all()
+
+    @property
+    def total_songs(self):
+        return self.songs.count()
 
     def __str__(self):
         return self.name
@@ -14,7 +32,12 @@ class Song(models.Model):
     name = models.CharField(max_length=30)
     image = models.ImageField(upload_to=get_file_path, default="media/music_cover/default.png")
     artist = models.ManyToManyField(Artist, related_name="songs")
-    url = models.URLField()
+    album = models.ForeignKey(Album,
+                            related_name="songs",
+                            on_delete=models.SET_NULL,
+                            null=True, blank=True,
+                            )
+    download_url = models.URLField()
     genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)
 
 
@@ -27,7 +50,7 @@ class Subtitle(models.Model):
         ("P","Persian"),
         ("E","English"),
     )
-    song = models.ForeignKey(Song, on_delete=models.CASCADE, related_name="subtitle")
+    song = models.ForeignKey(Song, on_delete=models.CASCADE, related_name="subtitles")
     text = models.TextField(blank=True, null=True)
     file = models.FileField(blank=True, null=True, validators=[subtitle_validator])
     language = models.CharField(max_length=1, choices=CHOICES)

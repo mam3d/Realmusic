@@ -1,15 +1,10 @@
 from factory.django import DjangoModelFactory
-from artist.models import Artist
 from ..models import (
     Genre,
     Song,
+    Album,
+    Subtitle,
 )
-
-class ArtistFactory(DjangoModelFactory):
-    name = None
-
-    class Meta:
-        model = Artist
 
 class GenreFactory(DjangoModelFactory):
     name = None
@@ -19,7 +14,22 @@ class GenreFactory(DjangoModelFactory):
 
 class SongFactory(DjangoModelFactory):
     name = None
-
-
+    album = None
+    genre = None
+    download_url = "t.com"
     class Meta:
         model = Song
+
+class AlbumFactory(DjangoModelFactory):
+    name = None
+    artist = None
+    genre = None
+    class Meta:
+        model = Album
+
+class SubtitleFactory(DjangoModelFactory):
+    song = None
+    language = "P"
+    text = "default text"
+    class Meta:
+        model = Subtitle

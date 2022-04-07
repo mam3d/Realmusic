@@ -1,12 +1,14 @@
 from django.core.files import File
 from unittest import mock
 from django.test import TestCase
+from artist.tests.factory import ArtistFactory
 from.factory import (
-    ArtistFactory,
     GenreFactory,
     SongFactory,
+    AlbumFactory,
 )
 from music.models import (
+    Album,
     Song,
     Subtitle,
 )
@@ -19,17 +21,22 @@ class SongTest(TestCase):
 
         artist = ArtistFactory(name="nf")
         genre = GenreFactory(name="rap")
+        album = AlbumFactory(name="the search",artist=artist)
         self.song = Song.objects.create(
             name = "nf",
             genre = genre,
             image = image,
+            album = album,
+            download_url = "t.com"
         )
         self.song.artist.add(artist)
     
     def test_created(self):
         self.assertEqual(self.song.name, "nf")
+        self.assertEqual(self.song.download_url, "t.com")
         artist = self.song.artist.all()[0]
         self.assertEqual(artist.name, "nf")
+        self.assertEqual(self.song.album.name, "the search")
         self.assertEqual(self.song.genre.name, "rap")
         self.assertTrue(self.song.image)
         self.assertEqual(str(self.song), "nf")
@@ -57,3 +64,24 @@ class SubtitleTest(TestCase):
         self.assertEqual(self.subtitle.language, "P")
         self.assertEqual(self.subtitle.text, "subtitle text")
         self.assertFalse(self.subtitle.file) # file deleted after reading in save method
+
+
+class AlbumTest(TestCase):
+
+    def setUp(self):
+        artist = ArtistFactory(name="nf")
+        genre = GenreFactory(name="rap")
+        self.album = Album(
+            name = "the search",
+            artist = artist,
+            genre = genre,
+        )
+        self.album.save()
+        self.song = SongFactory(name="the search",album=self.album)
+    
+    def test_created(self):
+        self.assertEqual(self.album.name, "the search")
+        self.assertEqual(self.album.artist.name, "nf")
+        self.assertEqual(self.album.genre.name, "rap")
+        self.assertEqual(self.album.total_songs, 1)
+        self.assertTrue(self.song in self.album.get_songs())
