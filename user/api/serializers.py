@@ -14,7 +14,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         if data["password"] != data["password2"]:
-            raise serializers.ValidationError("passwords didn't match")
+            raise serializers.ValidationError({"error":"password's didn't match"})
         return data
 
     def create(self, validated_data):
@@ -38,7 +38,7 @@ class LoginSerializer(serializers.Serializer):
         password = data["password"]
         user = authenticate(username=username, password=password)
         if user is None:
-            raise serializers.ValidationError({"wrong credentials":"password or username is incorrect"})
+            raise serializers.ValidationError({"error":"password or username is incorrect"})
         return user.get_jwt_token()
 
 class GoogleSerializer(serializers.Serializer):
@@ -48,7 +48,7 @@ class GoogleSerializer(serializers.Serializer):
         params = {"access_token": value}
         r = requests.get('https://www.googleapis.com/oauth2/v2/userinfo', params=params)
         if r.status_code != 200:
-            raise serializers.ValidationError("wrong access_token")
+            raise serializers.ValidationError({"error":"wrong access_token"})
         return r.json()["email"]
 
     def create(self, validated_data):
