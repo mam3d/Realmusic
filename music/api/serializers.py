@@ -4,6 +4,7 @@ from ..models import (
     Album,
     Song,
     Subtitle,
+    View,
 )
 
 class GenreListSerializer(serializers.ModelSerializer):
@@ -63,3 +64,15 @@ class SubtitleDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subtitle
         fields = ["id","song","language","text"]
+
+class ViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = View
+        fields = ["user","song"]
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=model.objects.all(),
+                fields=('user', 'song'),
+                message=(f"view with this user and song already exists")
+            )
+        ]

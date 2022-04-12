@@ -1,11 +1,13 @@
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from artist.tests.factory import ArtistFactory
+from user.tests.factory import UserFactory
 from .factory import (
     GenreFactory,
     SongFactory,
     AlbumFactory,
     SubtitleFactory,
+    ViewFactory,
 )
 
 class GenreListViewTest(APITestCase):
@@ -68,7 +70,6 @@ class AlbumDetailViewTest(APITestCase):
             )
         self.url = reverse("album-detail",kwargs={"pk":self.album.id})
 
-
     def test_response(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
@@ -76,3 +77,28 @@ class AlbumDetailViewTest(APITestCase):
         self.assertEqual(response.data["name"], "the search")
         self.assertEqual(response.data["genre"], "Rap")
         self.assertEqual(response.data["total_songs"], 1)
+
+
+class ViewCreateViewTest(APITestCase):
+    def setUp(self):
+        self.user = UserFactory(username="nf")
+        self.song = SongFactory(name="the search")
+        self.url = reverse("view-create")
+
+    def test_response(self):
+        payload = {
+            "user":self.user.id,
+            "song":self.song.id,           
+            }
+        response = self.client.post(self.url, data=payload)
+        self.assertEqual(response.status_code, 201)
+
+    def test_fails(self):
+        payload = {
+            "user":self.user.id,
+            "song":self.song.id,           
+            }
+        # already exists
+        ViewFactory(user=self.user,song=self.song)
+        response = self.client.post(self.url, data=payload)
+        self.assertEqual(response.status_code, 400)

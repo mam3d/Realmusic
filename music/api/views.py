@@ -4,12 +4,14 @@ from ..models import (
     Song,
     Subtitle,
     Album,
+    View,
 )
 from .serializers import (
     GenreListSerializer,
     SongDetailSerializer,
     SubtitleDetailSerializer,
     AlbumDetailSerializer,
+    ViewSerializer,
 )
 
 
@@ -27,6 +29,12 @@ class SubtitleDetailView(generics.RetrieveAPIView):
     queryset = Subtitle.objects.all()
     serializer_class = SubtitleDetailSerializer
 
+
 class AlbumDetailView(generics.RetrieveAPIView):
     queryset = Album.objects.all()
     serializer_class = AlbumDetailSerializer
+
+
+class ViewCreateView(generics.CreateAPIView):
+    queryset = View.objects.all()
+    serializer_class = ViewSerializer
