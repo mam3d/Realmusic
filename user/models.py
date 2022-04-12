@@ -6,12 +6,9 @@ from django.contrib.auth.models import (
     PermissionsMixin,
     BaseUserManager,
 )
-from django.forms import ValidationError
 
 class UserManager(BaseUserManager):
     def create(self, username, password, **kwargs):
-        if len(password) < 8:
-            raise ValidationError("password is too short")
         user = self.model(username=username, **kwargs)
         user.set_password(password)
         user.save()

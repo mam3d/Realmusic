@@ -12,6 +12,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ["username", "password", "password2"]
 
+    def validate_password(self, value):
+        if len(value) < 8:
+            raise serializers.ValidationError("password should be atleast 8 characters")
+        return value
+
     def validate(self, data):
         if data["password"] != data["password2"]:
             raise serializers.ValidationError({"error":"password's didn't match"})
