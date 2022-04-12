@@ -1,6 +1,7 @@
 
 from django.db import models
 from artist.models import Artist
+from user.models import User
 from utils.image import get_file_path
 from utils.validators import subtitle_validator
 
@@ -40,9 +41,14 @@ class Song(models.Model):
     download_url = models.URLField()
     genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)
 
+    @property
+    def total_views(self):
+        return self.views.count()
 
     def __str__(self):
         return self.name
+
+
 
 
 class Subtitle(models.Model):
@@ -66,3 +72,14 @@ class Subtitle(models.Model):
 
     def __str__(self):
         return f"{self.song.name}'s subtitle"
+
+
+class View(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    song =  models.ForeignKey(Song, on_delete=models.CASCADE, related_name="views")
+
+    def __str__(self):
+        return f"{self.user}-{self.song} view"
+
+    class Meta:
+        unique_together = [['user', 'song']]

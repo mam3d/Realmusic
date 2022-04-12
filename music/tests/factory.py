@@ -4,6 +4,7 @@ from ..models import (
     Song,
     Album,
     Subtitle,
+    View,
 )
 
 class GenreFactory(DjangoModelFactory):
@@ -33,3 +34,11 @@ class SubtitleFactory(DjangoModelFactory):
     text = "default text"
     class Meta:
         model = Subtitle
+
+
+class ViewFactory(DjangoModelFactory):
+    user = None
+    song = None
+    
+    class Meta:
+        model = View

@@ -2,15 +2,18 @@ from django.core.files import File
 from unittest import mock
 from django.test import TestCase
 from artist.tests.factory import ArtistFactory
+from user.tests.factory import UserFactory
 from.factory import (
     GenreFactory,
     SongFactory,
     AlbumFactory,
+    ViewFactory,
 )
 from music.models import (
     Album,
     Song,
     Subtitle,
+    View,
 )
 
 class SongTest(TestCase):
@@ -29,6 +32,7 @@ class SongTest(TestCase):
             album = album,
             download_url = "t.com"
         )
+        view = ViewFactory(song=self.song, user=UserFactory())
         self.song.artist.add(artist)
     
     def test_created(self):
@@ -38,6 +42,7 @@ class SongTest(TestCase):
         self.assertEqual(artist.name, "nf")
         self.assertEqual(self.song.album.name, "the search")
         self.assertEqual(self.song.genre.name, "rap")
+        self.assertEqual(self.song.total_views, 1)
         self.assertTrue(self.song.image)
         self.assertEqual(str(self.song), "nf")
 
@@ -85,3 +90,17 @@ class AlbumTest(TestCase):
         self.assertEqual(self.album.genre.name, "rap")
         self.assertEqual(self.album.total_songs, 1)
         self.assertTrue(self.song in self.album.get_songs())
+
+
+class ViewTest(TestCase):
+
+    def setUp(self):
+        user = UserFactory(username="test")
+        song = SongFactory(name="the search")
+        self.view = View.objects.create(user=user, song=song)
+
+    
+    def test_created(self):
+        self.assertEqual(self.view.user.username, "test")
+        self.assertEqual(self.view.song.name, "the search")
+        self.assertEqual(str(self.view), "test-the search view")

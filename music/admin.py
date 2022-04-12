@@ -4,17 +4,23 @@ from .models import (
     Song,
     Subtitle,
     Album,
+    View,
 )
 
+@admin.register(View)
+class ViewAdmin(admin.ModelAdmin):
+    list_display = ["user","song"]
+
+
 @admin.register(Genre)
-class GenreAdmin(admin.ModelAdmin):
+class ViewAdmin(admin.ModelAdmin):
     list_display = ["name"]
     list_filter = ["name"]
 
 
 @admin.register(Song)
 class SongAdmin(admin.ModelAdmin):
-    list_display = ["name","genre","download_url"]
+    list_display = ["name","genre","download_url","total_views"]
     list_filter = ["genre","artist"]
     raw_id_fields = ("artist",)
 
