@@ -5,11 +5,17 @@ from .models import (
     Subtitle,
     Album,
     View,
+    PlayList,
 )
 
 @admin.register(View)
 class ViewAdmin(admin.ModelAdmin):
     list_display = ["user","song"]
+
+
+@admin.register(PlayList)
+class PlayListAdmin(admin.ModelAdmin):
+    list_display = ["name","user"]
 
 
 @admin.register(Genre)

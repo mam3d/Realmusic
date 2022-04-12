@@ -14,6 +14,7 @@ from music.models import (
     Song,
     Subtitle,
     View,
+    PlayList,
 )
 
 class SongTest(TestCase):
@@ -104,3 +105,19 @@ class ViewTest(TestCase):
         self.assertEqual(self.view.user.username, "test")
         self.assertEqual(self.view.song.name, "the search")
         self.assertEqual(str(self.view), "test-the search view")
+
+
+class PlayListTest(TestCase):
+
+    def setUp(self):
+        user = UserFactory(username="test")
+        self.song = SongFactory(name="the search")
+        self.playlist = PlayList.objects.create(name="my-play-list", user=user)
+        self.playlist.songs.add(self.song)
+
+    
+    def test_created(self):
+        self.assertEqual(self.playlist.name, "my-play-list")
+        self.assertEqual(self.playlist.user.username, "test")
+        self.assertTrue(self.song in self.playlist.songs.all())
+        self.assertEqual(str(self.playlist), "test-my-play-list playlist")

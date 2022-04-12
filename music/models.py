@@ -83,3 +83,12 @@ class View(models.Model):
 
     class Meta:
         unique_together = [['user', 'song']]
+
+
+class PlayList(models.Model):
+    name = models.CharField(max_length=30)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    songs =  models.ManyToManyField(Song, related_name="songs")
+
+    def __str__(self):
+        return f"{self.user}-{self.name} playlist"
