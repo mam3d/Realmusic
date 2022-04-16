@@ -2,6 +2,7 @@ from rest_framework import (
     generics,
     permissions,
 )
+from .permissions import IsPlayListOwner
 from ..models import (
     Genre,
     Song,
@@ -48,6 +49,7 @@ class ViewCreateView(generics.CreateAPIView):
 
 class PlayListView(generics.RetrieveUpdateDestroyAPIView):
     queryset = PlayList.objects.all()
+    permission_classes = [IsPlayListOwner, permissions.IsAuthenticated]
 
     def get_serializer_class(self):
         if self.request.method == "PUT":
@@ -56,6 +58,5 @@ class PlayListView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class PlayListCreateView(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
     queryset = PlayList.objects.all()
     serializer_class = PlayListCreateUpdateSerializer

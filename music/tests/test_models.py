@@ -118,6 +118,7 @@ class PlayListTest(TestCase):
     
     def test_created(self):
         self.assertEqual(self.playlist.name, "my-play-list")
+        self.assertEqual(self.playlist.image.name, "playlist/default.png")
         self.assertEqual(self.playlist.user.username, "test")
         self.assertTrue(self.song in self.playlist.songs.all())
         self.assertEqual(str(self.playlist), "test-my-play-list playlist")

@@ -5,13 +5,16 @@ from ..models import (
     Album,
     Subtitle,
     View,
+    PlayList,
 )
+
 
 class GenreFactory(DjangoModelFactory):
     name = None
     
     class Meta:
         model = Genre
+
 
 class SongFactory(DjangoModelFactory):
     name = None
@@ -21,12 +24,14 @@ class SongFactory(DjangoModelFactory):
     class Meta:
         model = Song
 
+
 class AlbumFactory(DjangoModelFactory):
     name = None
     artist = None
     genre = None
     class Meta:
         model = Album
+
 
 class SubtitleFactory(DjangoModelFactory):
     song = None
@@ -42,3 +47,12 @@ class ViewFactory(DjangoModelFactory):
     
     class Meta:
         model = View
+
+
+class PlayListFactory(DjangoModelFactory):
+    user = None
+    name = None
+    song = None
+    
+    class Meta:
+        model = PlayList

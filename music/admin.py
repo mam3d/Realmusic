@@ -16,6 +16,7 @@ class ViewAdmin(admin.ModelAdmin):
 @admin.register(PlayList)
 class PlayListAdmin(admin.ModelAdmin):
     list_display = ["name","user"]
+    raw_id_fields = ("user","songs")
 
 
 @admin.register(Genre)
@@ -29,6 +30,7 @@ class SongAdmin(admin.ModelAdmin):
     list_display = ["name","genre","download_url","total_views"]
     list_filter = ["genre","artist"]
     raw_id_fields = ("artist",)
+    search_fields = ["name"]
 
 
 @admin.register(Subtitle)

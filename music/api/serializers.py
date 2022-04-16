@@ -85,23 +85,24 @@ class ViewSerializer(serializers.ModelSerializer):
 
 
 class PlayListCreateUpdateSerializer(serializers.ModelSerializer):
-    songs = serializers.PrimaryKeyRelatedField(queryset=Song.objects.all(), many=True)
-    add_song = serializers.PrimaryKeyRelatedField(queryset=Song.objects.all(),required=False)
-    remove_song = serializers.PrimaryKeyRelatedField(queryset=Song.objects.all(),required=False)
+    add_songs = serializers.PrimaryKeyRelatedField(queryset=Song.objects.all(),required=False, many=True)
+    remove_songs = serializers.PrimaryKeyRelatedField(queryset=Song.objects.all(),required=False, many=True)
+    clear_songs = serializers.BooleanField(write_only=True, required=False)
     class Meta:
         model = PlayList
-        fields = ["id","name","user","songs","add_song","remove_song","image"]
+        fields = ["id", "name", "image", "user", "add_songs", "remove_songs", "clear_songs", "songs"]
         extra_kwargs = {
             "user":{"read_only":True},
+            "songs":{"read_only":True},
         }
 
     def create(self, validated_data):
+        validated_data.pop("remove_songs", None)
+        validated_data.pop("clear_songs", None)
 
-        if validated_data.get("add_song"):
-            validated_data.pop("add_song")
-
-        if validated_data.get("remove_song"):
-            validated_data.pop("remove_song")
+        # playlist's songs field name is songs so changed the keyname in dictionary for creating object
+        add_songs = validated_data.pop("add_songs", None)
+        validated_data.update(songs=add_songs)
 
         validated_data.update(user=self.context["request"].user)
         return super().create(validated_data)
@@ -110,14 +111,24 @@ class PlayListCreateUpdateSerializer(serializers.ModelSerializer):
         instance.name = validated_data.get("name", instance.name)
         instance.image = validated_data.get("image", instance.image)
 
-        if validated_data.get("add_song"):
-            instance.songs.add(validated_data.get("add_song"))
-        if validated_data.get("remove_song"):
-            instance.songs.remove(validated_data.get("remove_song"))
-        
+        if validated_data.get("add_songs"):
+            for song in validated_data.get("add_songs"):
+                instance.songs.add(song)
+
+        if validated_data.get("remove_songs"):
+            for song in validated_data.get("remove_songs"):
+                instance.songs.add(song)
+
+        if validated_data.get("clear_songs"):
+            instance.songs.clear()
+
         instance.save()
         return instance
 
+    def to_representation(self, instance):
+        self.fields.pop("add_songs", None)
+        self.fields.pop("remove_songs", None)
+        return super().to_representation(instance)
 
 class PlayListSerializer(serializers.ModelSerializer):
     songs = SongListSerializer(many=True, read_only=True)
