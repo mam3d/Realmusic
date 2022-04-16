@@ -1,5 +1,6 @@
 from rest_framework.test import APITestCase
 from django.urls import reverse
+from user.tests.factory import UserFactory
 from music.tests.factory import GenreFactory, SongFactory
 from .factory import ArtistFactory
 
@@ -10,8 +11,12 @@ class ArtistListViewTest(APITestCase):
         self.artist = ArtistFactory(name="nf", genre=genre)
         self.url = reverse("artist-list")
 
+        self.user = UserFactory()
+        access = self.user.get_jwt_token()["access"]
+        self.authorization_header = {"HTTP_AUTHORIZATION":f"Bearer {access}"}
+
     def test_response(self):
-        response = self.client.get(self.url)
+        response = self.client.get(self.url, **self.authorization_header)
         response_data = response.data[0]
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response_data["name"], self.artist.name)
@@ -26,8 +31,12 @@ class ArtistDetailViewTest(APITestCase):
         song.artist.add(self.artist)
         self.url = reverse("artist-detail",kwargs={"slug":self.artist.slug})
 
+        self.user = UserFactory()
+        access = self.user.get_jwt_token()["access"]
+        self.authorization_header = {"HTTP_AUTHORIZATION":f"Bearer {access}"}
+
     def test_response(self):
-        response = self.client.get(self.url)
+        response = self.client.get(self.url, **self.authorization_header)
         response_data = response.data
         
         self.assertEqual(response.status_code, 200)

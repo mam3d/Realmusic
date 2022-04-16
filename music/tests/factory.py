@@ -52,7 +52,6 @@ class ViewFactory(DjangoModelFactory):
 class PlayListFactory(DjangoModelFactory):
     user = None
     name = None
-    song = None
     
     class Meta:
         model = PlayList

@@ -85,8 +85,8 @@ class ViewSerializer(serializers.ModelSerializer):
 
 
 class PlayListCreateUpdateSerializer(serializers.ModelSerializer):
-    add_songs = serializers.PrimaryKeyRelatedField(queryset=Song.objects.all(),required=False, many=True)
-    remove_songs = serializers.PrimaryKeyRelatedField(queryset=Song.objects.all(),required=False, many=True)
+    add_songs = serializers.PrimaryKeyRelatedField(queryset=Song.objects.all(), required=False, many=True)
+    remove_songs = serializers.PrimaryKeyRelatedField(queryset=Song.objects.all(), required=False, many=True)
     clear_songs = serializers.BooleanField(write_only=True, required=False)
     class Meta:
         model = PlayList
@@ -117,7 +117,7 @@ class PlayListCreateUpdateSerializer(serializers.ModelSerializer):
 
         if validated_data.get("remove_songs"):
             for song in validated_data.get("remove_songs"):
-                instance.songs.add(song)
+                instance.songs.remove(song)
 
         if validated_data.get("clear_songs"):
             instance.songs.clear()
