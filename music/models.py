@@ -14,7 +14,7 @@ class Genre(models.Model):
 
 class Album(models.Model):
     name = models.CharField(max_length=30)
-    image = models.ImageField(upload_to=get_file_path, default="media/music_cover/default.png")
+    image = models.ImageField(upload_to=get_file_path, default="music_cover/default.png")
     artist = models.ForeignKey(Artist, related_name="albums", on_delete=models.CASCADE)
     genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -87,8 +87,9 @@ class View(models.Model):
 
 class PlayList(models.Model):
     name = models.CharField(max_length=30)
+    image = models.ImageField(default="playlist/default.png", upload_to=get_file_path)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    songs =  models.ManyToManyField(Song, related_name="songs")
+    songs = models.ManyToManyField(Song, related_name="songs")
 
     def __str__(self):
         return f"{self.user}-{self.name} playlist"

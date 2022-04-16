@@ -1,10 +1,14 @@
-from rest_framework import generics
+from rest_framework import (
+    generics,
+    permissions,
+)
 from ..models import (
     Genre,
     Song,
     Subtitle,
     Album,
     View,
+    PlayList,
 )
 from .serializers import (
     GenreListSerializer,
@@ -12,6 +16,8 @@ from .serializers import (
     SubtitleDetailSerializer,
     AlbumDetailSerializer,
     ViewSerializer,
+    PlayListCreateUpdateSerializer,
+    PlayListSerializer,
 )
 
 
@@ -38,3 +44,18 @@ class AlbumDetailView(generics.RetrieveAPIView):
 class ViewCreateView(generics.CreateAPIView):
     queryset = View.objects.all()
     serializer_class = ViewSerializer
+
+
+class PlayListView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = PlayList.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method == "PUT":
+            return PlayListCreateUpdateSerializer
+        return PlayListSerializer
+
+
+class PlayListCreateView(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = PlayList.objects.all()
+    serializer_class = PlayListCreateUpdateSerializer
