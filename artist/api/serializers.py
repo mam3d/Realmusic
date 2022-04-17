@@ -12,10 +12,7 @@ class ArtistListSerializer(serializers.ModelSerializer):
 
 
 class ArtistDetailSerializer(serializers.ModelSerializer):
-    albums = serializers.HyperlinkedRelatedField(view_name="album-detail",
-                                                    many=True,
-                                                    read_only=True
-                                                    )
+    albums = serializers.SerializerMethodField()
     single_songs = serializers.SerializerMethodField()
     class Meta:
         model = Artist
@@ -24,3 +21,13 @@ class ArtistDetailSerializer(serializers.ModelSerializer):
     def get_single_songs(self, obj):
         serializer = SongListSerializer(obj.get_single_songs(),many=True,context=self.context)
         return serializer.data
+
+    def get_albums(self, obj):
+        data = []
+        for album in obj.get_albums():
+            data.append({
+                "id":album.id,
+                "name":album.name,
+                "image":self.context['request'].build_absolute_uri(obj.image.url),
+                })
+        return data
