@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+from artist.api.serializers import ArtistListSerializer
 from ..models import (
     Genre,
     Album,
@@ -16,54 +16,34 @@ class GenreListSerializer(serializers.ModelSerializer):
         fields = ["id","name"]
 
 
-class AlbumDetailSerializer(serializers.ModelSerializer):
-    artist = serializers.HyperlinkedRelatedField(view_name="artist-detail",
-                                                read_only=True,
-                                                lookup_field="slug",
-                                                )
-    songs = serializers.HyperlinkedRelatedField(view_name="song-detail",
-                                                read_only=True,
-                                                many=True,
-                                                )                                               
+class SongListSerializer(serializers.ModelSerializer):
+    artists = serializers.StringRelatedField(many=True)
+
+
+    class Meta:
+        model = Song
+        fields = ["id","name","artists", "image"]
+
+
+class SongDetailSerializer(serializers.ModelSerializer):
+    artists = ArtistListSerializer(many=True, read_only=True)
+    album = serializers.StringRelatedField()
     genre = serializers.StringRelatedField()
+    class Meta:
+        model = Song
+        fields = ["name","artists","image","album","download_url","genre","subtitles"]
+
+
+class AlbumDetailSerializer(serializers.ModelSerializer):
+    songs =  SongListSerializer(many=True, read_only=True)                                              
+    genre = serializers.StringRelatedField()
+    artist = serializers.StringRelatedField()
     class Meta:
         model = Album
         fields = ["id","name","image","artist","total_songs","genre","songs"]
 
 
-class SongListSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="song-detail")
-    artist = serializers.HyperlinkedRelatedField(view_name="artist-detail",
-                                            lookup_field="slug",
-                                            read_only=True,
-                                            many=True,
-                                            )
-
-
-    class Meta:
-        model = Song
-        fields = ["url","name","artist","album", "image"]
-
-
-class SongDetailSerializer(serializers.ModelSerializer):
-    artist = serializers.HyperlinkedRelatedField(view_name="artist-detail",
-                                        lookup_field="slug",
-                                        read_only=True,
-                                        many=True,
-                                        )
-    subtitles = serializers.HyperlinkedRelatedField(view_name="subtitle-detail",
-                                    read_only=True,
-                                    many=True,
-                                    )
-    album = serializers.StringRelatedField()
-    genre = serializers.StringRelatedField()
-    class Meta:
-        model = Song
-        fields = ["name","artist","image","album","download_url","genre","subtitles"]
-
-
 class SubtitleDetailSerializer(serializers.ModelSerializer):
-    song = serializers.HyperlinkedRelatedField(view_name="song-detail",read_only=True)
     language = serializers.CharField(source="get_language_display")
 
     class Meta:

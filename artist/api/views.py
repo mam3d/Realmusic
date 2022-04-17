@@ -7,7 +7,6 @@ from .serializers import (
 
 class ArtistViewSet(ReadOnlyModelViewSet):
     queryset = Artist.objects.all()
-    lookup_field = "slug"
     filterset_fields = ["genre"]
 
     def get_serializer_class(self):

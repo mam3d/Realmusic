@@ -1,17 +1,16 @@
 from rest_framework import serializers
-from music.api.serializers import SongListSerializer
 from ..models import Artist
 
 
 class ArtistListSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="artist-detail",lookup_field="slug")
-    genre = serializers.StringRelatedField()
     class Meta:
         model = Artist
-        fields = ["url","name","image", "genre"]
+        fields = ["id","name","image"]
 
 
+from music.api.serializers import SongListSerializer
 class ArtistDetailSerializer(serializers.ModelSerializer):
+    
     albums = serializers.SerializerMethodField()
     single_songs = serializers.SerializerMethodField()
     class Meta:

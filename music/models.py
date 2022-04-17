@@ -32,7 +32,7 @@ class Album(models.Model):
 class Song(models.Model):
     name = models.CharField(max_length=30)
     image = models.ImageField(upload_to=get_file_path, default="media/music_cover/default.png")
-    artist = models.ManyToManyField(Artist, related_name="songs")
+    artists = models.ManyToManyField(Artist, related_name="songs")
     album = models.ForeignKey(Album,
                             related_name="songs",
                             on_delete=models.SET_NULL,

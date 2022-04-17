@@ -20,7 +20,7 @@ class ArtistListViewTest(APITestCase):
         response_data = response.data[0]
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response_data["name"], self.artist.name)
-        self.assertEqual(response_data["genre"], "Rap")
+        self.assertEqual(response_data["id"], self.artist.id)
 
 
 class ArtistDetailViewTest(APITestCase):
@@ -28,8 +28,8 @@ class ArtistDetailViewTest(APITestCase):
         genre = GenreFactory(name="Rap")
         self.artist = ArtistFactory(name="nf", genre=genre)
         song = SongFactory(name="the search")
-        song.artist.add(self.artist)
-        self.url = reverse("artist-detail",kwargs={"slug":self.artist.slug})
+        song.artists.add(self.artist)
+        self.url = reverse("artist-detail",kwargs={"pk":self.artist.id})
 
         self.user = UserFactory()
         access = self.user.get_jwt_token()["access"]

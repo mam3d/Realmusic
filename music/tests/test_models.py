@@ -34,12 +34,12 @@ class SongTest(TestCase):
             download_url = "t.com"
         )
         view = ViewFactory(song=self.song, user=UserFactory())
-        self.song.artist.add(artist)
+        self.song.artists.add(artist)
     
     def test_created(self):
         self.assertEqual(self.song.name, "nf")
         self.assertEqual(self.song.download_url, "t.com")
-        artist = self.song.artist.all()[0]
+        artist = self.song.artists.all()[0]
         self.assertEqual(artist.name, "nf")
         self.assertEqual(self.song.album.name, "the search")
         self.assertEqual(self.song.genre.name, "rap")
