@@ -1,3 +1,4 @@
+from django.db.models import Count
 from rest_framework import (
     generics,
     permissions,
@@ -14,6 +15,7 @@ from ..models import (
 from .serializers import (
     GenreListSerializer,
     SongDetailSerializer,
+    SongListSerializer,
     SubtitleDetailSerializer,
     AlbumDetailSerializer,
     ViewSerializer,
@@ -30,6 +32,11 @@ class GenreListView(generics.ListAPIView):
 class SongDetailView(generics.RetrieveAPIView):
     queryset = Song.objects.all()
     serializer_class = SongDetailSerializer
+
+
+class SongListView(generics.ListAPIView):
+    queryset = Song.objects.annotate(views_count=Count("views")).order_by("-views_count")
+    serializer_class = SongListSerializer
 
 
 class SubtitleDetailView(generics.RetrieveAPIView):

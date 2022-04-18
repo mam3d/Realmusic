@@ -51,6 +51,7 @@ class Song(models.Model):
 
 
 
+
 class Subtitle(models.Model):
     CHOICES = (
         ("P","Persian"),
@@ -76,7 +77,7 @@ class Subtitle(models.Model):
 
 class View(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    song =  models.ForeignKey(Song, on_delete=models.CASCADE, related_name="views")
+    song =  models.ForeignKey(Song, on_delete=models.CASCADE, related_name="views", related_query_name="views")
 
     def __str__(self):
         return f"{self.user}-{self.song} view"
