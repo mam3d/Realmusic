@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework.test import APITestCase
 from artist.tests.factory import ArtistFactory
 from user.tests.factory import UserFactory
-from music.models import PlayList
+from music.models import PlayList, Like
 from .factory import (
     GenreFactory,
     SongFactory,
@@ -122,6 +122,30 @@ class ViewCreateViewTest(APITestCase):
         ViewFactory(user=self.user,song=self.song)
         response = self.client.post(self.url, data=payload, **self.authorization_header)
         self.assertEqual(response.status_code, 400)
+
+
+class LikeViewTest(APITestCase):
+    def setUp(self):
+        self.user = UserFactory(username="nf")
+        self.song = SongFactory(name="the search")
+
+        access = self.user.get_jwt_token()["access"]
+        self.authorization_header = {"HTTP_AUTHORIZATION":f"Bearer {access}"}
+
+    def test_create(self):
+        payload = {
+            "user":self.user.id,
+            "song":self.song.id,           
+            }
+        url = reverse("like-create")
+        response = self.client.post(url, data=payload, **self.authorization_header)
+        self.assertEqual(response.status_code, 201)
+
+    def test_delete(self):
+        Like.objects.create(user=self.user, song=self.song)
+        url = reverse("like-delete", kwargs={"pk":int(f"{self.user.id}{self.song.id}")})
+        response = self.client.delete(url, **self.authorization_header)
+        self.assertEqual(response.status_code, 204)
 
 
 class PlayListViewTest(APITestCase):

@@ -1,6 +1,7 @@
-from django.core.files import File
-from unittest import mock
 from django.test import TestCase
+from django.core.files import File
+from django.db import IntegrityError
+from unittest import mock
 from artist.tests.factory import ArtistFactory
 from user.tests.factory import UserFactory
 from.factory import (
@@ -15,7 +16,9 @@ from music.models import (
     Subtitle,
     View,
     PlayList,
+    Like,
 )
+
 
 class SongTest(TestCase):
 
@@ -96,15 +99,34 @@ class AlbumTest(TestCase):
 class ViewTest(TestCase):
 
     def setUp(self):
-        user = UserFactory(username="test")
-        song = SongFactory(name="the search")
-        self.view = View.objects.create(user=user, song=song)
+        self.user = UserFactory(username="test")
+        self.song = SongFactory(name="the search")
+        self.view = View.objects.create(user=self.user, song=self.song)
 
     
     def test_created(self):
         self.assertEqual(self.view.user.username, "test")
         self.assertEqual(self.view.song.name, "the search")
         self.assertEqual(str(self.view), "test-the search view")
+        with self.assertRaises(IntegrityError):
+            View.objects.create(user=self.user, song=self.song)
+
+
+class LikeTest(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory(username="test")
+        self.song = SongFactory(name="the search")
+        self.like = Like.objects.create(user=self.user, song=self.song)
+
+    
+    def test_created(self):
+        self.assertEqual(self.like.user.username, "test")
+        self.assertEqual(self.like.song.name, "the search")
+        self.assertEqual(str(self.like), "test-the search like")
+        with self.assertRaises(IntegrityError):
+            Like.objects.create(user=self.user, song=self.song)
+        
 
 
 class PlayListTest(TestCase):
