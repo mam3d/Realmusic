@@ -17,6 +17,7 @@ services:
       - 8000:8000
     volumes:
       - .:/realmusic
+      - media_volume:/realmusic/media/
     depends_on:
       - db
     restart: on-failure
@@ -41,4 +42,5 @@ networks:
 
 volumes:
   postgres_db:
+  media_volume:
   
