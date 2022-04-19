@@ -2,6 +2,7 @@ from django.db.models import Count
 from rest_framework import (
     generics,
     permissions,
+    filters,
 )
 from .permissions import IsPlayListOwner
 from ..models import (
@@ -37,6 +38,8 @@ class SongDetailView(generics.RetrieveAPIView):
 class SongListView(generics.ListAPIView):
     queryset = Song.objects.annotate(views_count=Count("views")).order_by("-views_count")
     serializer_class = SongListSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["name"]
 
 
 class SubtitleDetailView(generics.RetrieveAPIView):

@@ -90,7 +90,7 @@ class PlayList(models.Model):
     name = models.CharField(max_length=30)
     image = models.ImageField(default="playlist/default.png", upload_to=get_file_path)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    songs = models.ManyToManyField(Song, related_name="songs", blank=True)
+    songs = models.ManyToManyField(Song, related_name="playlists", blank=True)
 
     def __str__(self):
         return f"{self.user}-{self.name} playlist"
