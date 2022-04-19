@@ -7,3 +7,9 @@ class IsPlayListOwner(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         return bool(obj.user == request.user and request.user.is_authenticated)
+
+class IsLikeOwner(permissions.BasePermission):
+    message = "you are not owner of this like"
+
+    def has_object_permission(self, request, view, obj):
+        return bool(obj.user == request.user and request.user.is_authenticated)

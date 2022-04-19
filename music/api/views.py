@@ -4,7 +4,7 @@ from rest_framework import (
     permissions,
     filters,
 )
-from .permissions import IsPlayListOwner
+from .permissions import IsPlayListOwner, IsLikeOwner
 from ..models import (
     Genre,
     Song,
@@ -62,6 +62,11 @@ class ViewCreateView(generics.CreateAPIView):
 class LikeCreateView(generics.CreateAPIView):
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
+
+
+class LikeDeleteView(generics.DestroyAPIView):
+    queryset = Like.objects.all()
+    permission_classes = [IsLikeOwner, permissions.IsAuthenticated]
 
 
 class PlayListView(generics.RetrieveUpdateDestroyAPIView):
