@@ -6,11 +6,18 @@ from .models import (
     Album,
     View,
     PlayList,
+    Like,
 )
 
 @admin.register(View)
 class ViewAdmin(admin.ModelAdmin):
     list_display = ["user","song"]
+
+
+@admin.register(Like)
+class LikeAdmin(admin.ModelAdmin):
+    list_display = ["user","song"]
+    exclude = ["id"]
 
 
 @admin.register(PlayList)

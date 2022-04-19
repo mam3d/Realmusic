@@ -12,6 +12,7 @@ from ..models import (
     Album,
     View,
     PlayList,
+    Like,
 )
 from .serializers import (
     GenreListSerializer,
@@ -22,6 +23,7 @@ from .serializers import (
     ViewSerializer,
     PlayListCreateUpdateSerializer,
     PlayListSerializer,
+    LikeSerializer
 )
 
 
@@ -55,6 +57,11 @@ class AlbumDetailView(generics.RetrieveAPIView):
 class ViewCreateView(generics.CreateAPIView):
     queryset = View.objects.all()
     serializer_class = ViewSerializer
+
+
+class LikeCreateView(generics.CreateAPIView):
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
 
 
 class PlayListView(generics.RetrieveUpdateDestroyAPIView):

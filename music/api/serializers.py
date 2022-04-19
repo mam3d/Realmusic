@@ -7,6 +7,7 @@ from ..models import (
     Subtitle,
     View,
     PlayList,
+    Like,
 )
 
 
@@ -60,6 +61,18 @@ class ViewSerializer(serializers.ModelSerializer):
                 queryset=model.objects.all(),
                 fields=('user', 'song'),
                 message=(f"view with this user and song already exists")
+            )
+        ]
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = ["user","song"]
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=model.objects.all(),
+                fields=('user', 'song'),
+                message=(f"like with this user and song already exists")
             )
         ]
 

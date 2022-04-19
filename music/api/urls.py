@@ -8,6 +8,7 @@ from .views import (
     ViewCreateView,
     PlayListView,
     PlayListCreateView,
+    LikeCreateView,
 )
 
 urlpatterns = [
@@ -15,6 +16,7 @@ urlpatterns = [
     path("playlist/<int:pk>/", PlayListView.as_view(), name="playlist"),
     path("playlist/", PlayListCreateView.as_view(), name="playlist-create"),
     path("view/", ViewCreateView.as_view(), name="view-create"),
+    path("like/", LikeCreateView.as_view(), name="like-create"),
     path("song/", SongListView.as_view(), name="song"),
     path("song/<int:pk>/", SongDetailView.as_view(), name="song-detail"),
     path("subtitle/<int:pk>/", SubtitleDetailView.as_view(), name="subtitle-detail"),

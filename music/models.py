@@ -45,6 +45,10 @@ class Song(models.Model):
     def total_views(self):
         return self.views.count()
 
+    @property
+    def total_likes(self):
+        return self.likes.count()
+
     def __str__(self):
         return self.name
 
@@ -81,7 +85,21 @@ class View(models.Model):
 
     def __str__(self):
         return f"{self.user}-{self.song} view"
+    class Meta:
+        unique_together = [['user', 'song']]
 
+
+class Like(models.Model):
+    id = models.IntegerField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    song =  models.ForeignKey(Song, on_delete=models.CASCADE, related_name="likes", related_query_name="likes")
+
+    def __str__(self):
+        return f"{self.user}-{self.song} like"
+
+    def save(self, *args, **kwargs):
+        self.id = int(f"{self.user.id}{self.song.id}")
+        return super().save(*args, **kwargs)
     class Meta:
         unique_together = [['user', 'song']]
 
