@@ -1,17 +1,11 @@
 from django.db import models
-from django.template.defaultfilters import slugify
+from user.models import User
 from utils.image import get_file_path
 
 class Artist(models.Model):
     name = models.CharField(max_length=100, unique=True)
     image = models.ImageField(get_file_path, default="media/artist_iamge/default.png")
     genre = models.ForeignKey("music.Genre", on_delete=models.SET_NULL, null=True, blank=True)
-    slug = models.SlugField(unique=True)
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        return super().save(*args, **kwargs)
 
     def get_songs(self):
         return self.songs.all()
@@ -24,3 +18,20 @@ class Artist(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Follow(models.Model):
+    id = models.IntegerField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followings")
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="followers")
+
+    class Meta:
+        unique_together = [["user","artist"]]
+
+    def __str__(self):
+        return f"{self.user}-{self.artist} follow"
+
+    def save(self, *args, **kwargs):
+        self.id = int(f"{self.user.id}{self.artist.id}")
+        return super().save(*args, **kwargs)
+        

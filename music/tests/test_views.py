@@ -107,7 +107,6 @@ class ViewCreateViewTest(APITestCase):
 
     def test_response(self):
         payload = {
-            "user":self.user.id,
             "song":self.song.id,           
             }
         response = self.client.post(self.url, data=payload, **self.authorization_header)
@@ -115,7 +114,6 @@ class ViewCreateViewTest(APITestCase):
 
     def test_fails(self):
         payload = {
-            "user":self.user.id,
             "song":self.song.id,           
             }
         # already exists
@@ -134,7 +132,6 @@ class LikeViewTest(APITestCase):
 
     def test_create(self):
         payload = {
-            "user":self.user.id,
             "song":self.song.id,           
             }
         url = reverse("like-create")

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Artist
+from ..models import Artist, Follow
 
 
 class ArtistListSerializer(serializers.ModelSerializer):
@@ -30,3 +30,22 @@ class ArtistDetailSerializer(serializers.ModelSerializer):
                 "image":self.context['request'].build_absolute_uri(obj.image.url),
                 })
         return data
+
+class FollowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Follow
+        fields = ["id", "artist"]
+        extra_kwargs = {"id":{"read_only":True}}
+
+    def validate(self, validated_data):
+        user = self.context["request"].user
+        artist = validated_data["artist"]
+        try:
+            Follow.objects.get(user=user, artist=artist)
+        except Follow.DoesNotExist:
+            return validated_data   
+        raise serializers.ValidationError("follow with this user and artist exists")
+
+    def create(self, validated_data):
+        validated_data.update(user=self.context["request"].user)
+        return super().create(validated_data)

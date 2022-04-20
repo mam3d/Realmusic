@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'drf_yasg',
 
 ]
+SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -1,3 +1,4 @@
+from django.db.utils import IntegrityError
 from rest_framework import serializers
 from artist.api.serializers import ArtistListSerializer
 from ..models import (
@@ -55,26 +56,40 @@ class SubtitleDetailSerializer(serializers.ModelSerializer):
 class ViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = View
-        fields = ["user","song"]
-        validators = [
-            serializers.UniqueTogetherValidator(
-                queryset=model.objects.all(),
-                fields=('user', 'song'),
-                message=(f"view with this user and song already exists")
-            )
-        ]
+        fields = ["id", "song"]
+    
+    def validate(self, validated_data):
+        user = self.context["request"].user
+        song = validated_data["song"]
+        try:
+            View.objects.get(user=user, song=song)
+        except View.DoesNotExist:
+            return validated_data
+        raise serializers.ValidationError("view with this user and song exists")
+
+    def create(self, validated_data):
+        validated_data.update(user=self.context["request"].user)
+        return super().create(validated_data)
+
 
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
-        fields = ["user","song"]
-        validators = [
-            serializers.UniqueTogetherValidator(
-                queryset=model.objects.all(),
-                fields=('user', 'song'),
-                message=(f"like with this user and song already exists")
-            )
-        ]
+        fields = ["id", "song"]
+        extra_kwargs = {"id":{"read_only":True}}
+
+    def validate(self, validated_data):
+        user = self.context["request"].user
+        song = validated_data["song"]
+        try:
+            Like.objects.get(user=user, song=song)
+        except Like.DoesNotExist:
+            return validated_data   
+        raise serializers.ValidationError("like with this user and song exists")
+
+    def create(self, validated_data):
+        validated_data.update(user=self.context["request"].user)
+        return super().create(validated_data)
 
 
 class PlayListCreateUpdateSerializer(serializers.ModelSerializer):

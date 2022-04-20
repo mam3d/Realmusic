@@ -82,11 +82,11 @@ class Subtitle(models.Model):
 class View(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     song =  models.ForeignKey(Song, on_delete=models.CASCADE, related_name="views", related_query_name="views")
+    class Meta:
+        unique_together = [['user', 'song']]
 
     def __str__(self):
         return f"{self.user}-{self.song} view"
-    class Meta:
-        unique_together = [['user', 'song']]
 
 
 class Like(models.Model):
