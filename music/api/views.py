@@ -3,6 +3,7 @@ from rest_framework import (
     generics,
     permissions,
     filters,
+    pagination,
 )
 from .permissions import IsPlayListOwner, IsLikeOwner
 from ..models import (
@@ -42,6 +43,7 @@ class SongListView(generics.ListAPIView):
     serializer_class = SongListSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ["name"]
+    pagination_class = pagination.PageNumberPagination
 
 
 class SubtitleDetailView(generics.RetrieveAPIView):
