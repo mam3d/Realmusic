@@ -4,7 +4,7 @@ from utils.image import get_file_path
 
 class Artist(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    image = models.ImageField(get_file_path, default="media/artist_iamge/default.png")
+    image = models.ImageField(upload_to=get_file_path, default="artist_iamge/default.png")
     genre = models.ForeignKey("music.Genre", on_delete=models.SET_NULL, null=True, blank=True)
 
     def get_songs(self):
