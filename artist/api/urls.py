@@ -4,6 +4,7 @@ from .views import (
     ArtistViewSet,
     FollowCreateView,
     FollowDeleteView,
+    FollowingView,
     
 )
 
@@ -11,6 +12,7 @@ router = DefaultRouter()
 router.register("",ArtistViewSet, basename="artist")
 
 urlpatterns = [
+    path("following/", FollowingView.as_view(), name="following"),
     path("follow/", FollowCreateView.as_view(), name="follow-create"),
     path("follow/<int:pk>/", FollowDeleteView.as_view(), name="follow-delete"), 
 ]

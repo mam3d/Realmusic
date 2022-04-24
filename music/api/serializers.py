@@ -1,6 +1,6 @@
-from django.db.utils import IntegrityError
+
 from rest_framework import serializers
-from artist.api.serializers import ArtistListSerializer
+
 from ..models import (
     Genre,
     Album,
@@ -24,9 +24,10 @@ class SongListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Song
-        fields = ["id", "name", "artists", "image", "total_views", "total_likes"]
+        fields = ["id", "name", "artists", "image", "total_views", "total_likes", "download_url"]
 
 
+from artist.api.serializers import ArtistListSerializer
 class SongDetailSerializer(serializers.ModelSerializer):
     artists = ArtistListSerializer(many=True, read_only=True)
     album = serializers.StringRelatedField()
