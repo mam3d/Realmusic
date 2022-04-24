@@ -4,6 +4,7 @@ from artist.models import Artist
 from user.models import User
 from utils.image import get_file_path
 from utils.validators import subtitle_validator
+from .managers import SongManager
 
 class Genre(models.Model):
     name = models.CharField(max_length=30)
@@ -40,6 +41,7 @@ class Song(models.Model):
                             )
     download_url = models.URLField()
     genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)
+    objects = SongManager()
 
     @property
     def total_views(self):

@@ -62,9 +62,9 @@ class FollowingSerializer(serializers.ModelSerializer):
         fields = ["artist", "musics"]
 
     def get_musics(self, obj):
-        # order song by not seen
-        songs = obj.artist.songs.order_by("-views")
-        # paginate by songs instead of default following
+        # order song by views
+        songs = obj.artist.songs.with_views().order_by("-views_count")
+        # paginate by song  because by default following is paginated
         page_size = api_settings.PAGE_SIZE
         paginator = Paginator(songs, page_size)
         page = self.context["request"].query_params.get("page", 1)

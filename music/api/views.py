@@ -39,7 +39,7 @@ class SongDetailView(generics.RetrieveAPIView):
 
 
 class SongListView(generics.ListAPIView):
-    queryset = Song.objects.annotate(views_count=Count("views")).order_by("-views_count")
+    queryset = Song.objects.with_views().order_by("-views_count")
     serializer_class = SongListSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ["name"]
