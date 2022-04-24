@@ -34,7 +34,7 @@ class ArtistDetailSerializer(serializers.ModelSerializer):
                 })
         return data
 
-class FollowSerializer(serializers.ModelSerializer):
+class FollowCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Follow
         fields = ["id", "artist"]

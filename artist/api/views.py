@@ -9,7 +9,7 @@ from ..models import Artist, Follow
 from .serializers import (
     ArtistListSerializer,
     ArtistDetailSerializer,
-    FollowSerializer,
+    FollowCreateSerializer,
     FollowingSerializer,
 )
 from .permissions import IsFollowOwner
@@ -27,18 +27,18 @@ class ArtistViewSet(viewsets.ReadOnlyModelViewSet):
         return ArtistDetailSerializer
 
 
-class FollowCreateView(generics.CreateAPIView):
+class FollowView(generics.ListCreateAPIView):
     queryset = Follow.objects.all()
-    serializer_class = FollowSerializer
 
+    def get_queryset(self):
+        return Follow.objects.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return  FollowCreateSerializer
+        return FollowingSerializer
 
 class FollowDeleteView(generics.DestroyAPIView):
     queryset = Follow.objects.all()
     permission_classes = [IsFollowOwner, permissions.IsAuthenticated]
 
-
-class FollowingView(generics.ListAPIView):
-    serializer_class = FollowingSerializer
-
-    def get_queryset(self):
-        return Follow.objects.filter(user=self.request.user)
