@@ -11,7 +11,7 @@ from .models import (
 
 @admin.register(View)
 class ViewAdmin(admin.ModelAdmin):
-    list_display = ["user","song"]
+    list_display = ["user","song", "date"]
 
 
 @admin.register(Like)
@@ -27,7 +27,7 @@ class PlayListAdmin(admin.ModelAdmin):
 
 
 @admin.register(Genre)
-class ViewAdmin(admin.ModelAdmin):
+class GenreAdmin(admin.ModelAdmin):
     list_display = ["name"]
     list_filter = ["name"]
 

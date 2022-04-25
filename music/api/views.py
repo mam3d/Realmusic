@@ -1,10 +1,10 @@
-from django.db.models import Count
+from django_filters import rest_framework as filters
 from rest_framework import (
     generics,
     permissions,
-    filters,
     pagination,
 )
+
 from .permissions import IsPlayListOwner, IsLikeOwner
 from ..models import (
     Genre,
@@ -26,6 +26,7 @@ from .serializers import (
     PlayListSerializer,
     LikeSerializer
 )
+from .filters import SongFilter
 
 
 class GenreListView(generics.ListAPIView):
@@ -41,8 +42,8 @@ class SongDetailView(generics.RetrieveAPIView):
 class SongListView(generics.ListAPIView):
     queryset = Song.objects.with_views().order_by("-views_count")
     serializer_class = SongListSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["name"]
+    filter_backends = [filters.DjangoFilterBackend]
+    filterset_class = SongFilter
     pagination_class = pagination.PageNumberPagination
 
 
