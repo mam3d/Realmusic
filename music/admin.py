@@ -34,8 +34,8 @@ class ViewAdmin(admin.ModelAdmin):
 
 @admin.register(Song)
 class SongAdmin(admin.ModelAdmin):
-    list_display = ["name","genre","download_url","total_views", "total_likes"]
-    list_filter = ["genre","artists"]
+    list_display = ["name", "genre", "download_url", "duration", "total_views", "total_likes"]
+    list_filter = ["genre", "artists"]
     raw_id_fields = ("artists",)
     search_fields = ["name"]
 
@@ -48,7 +48,7 @@ class SubtitleAdmin(admin.ModelAdmin):
 
 class SongInline(admin.TabularInline):
     model = Song
-    fields = ["name","artists","image","download_url","genre"]
+    fields = ["name", "artists", "image", "download_url", "duration", "genre"]
     raw_id_fields = ("artists",)
     extra = 0
 

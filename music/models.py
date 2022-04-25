@@ -39,6 +39,7 @@ class Song(models.Model):
                             on_delete=models.SET_NULL,
                             null=True, blank=True,
                             )
+    duration = models.FloatField()
     download_url = models.URLField()
     genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)
     objects = SongManager()

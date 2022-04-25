@@ -24,7 +24,7 @@ class SongListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Song
-        fields = ["id", "name", "artists", "image", "total_views", "total_likes", "download_url"]
+        fields = ["id", "name", "artists", "image", "duration", "total_views", "total_likes", "download_url"]
 
 
 from artist.api.serializers import ArtistListSerializer
@@ -34,7 +34,7 @@ class SongDetailSerializer(serializers.ModelSerializer):
     genre = serializers.StringRelatedField()
     class Meta:
         model = Song
-        fields = ["name","artists","image","album","download_url","genre","subtitles", "total_views", "total_likes"]
+        fields = ["name", "artists", "image", "album", "download_url", "duration", "genre", "subtitles", "total_views", "total_likes"]
 
 
 class AlbumDetailSerializer(serializers.ModelSerializer):
