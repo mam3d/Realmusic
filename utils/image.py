@@ -12,7 +12,4 @@ def get_file_path(instance, filename):
         path = "album_cover/"
     elif isinstance(instance, Artist):
         path = "artist_image/"
-
-    print(os.path.join(path, filename), flush=True)
-
     return os.path.join(path, filename)

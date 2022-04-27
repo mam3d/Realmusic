@@ -45,6 +45,12 @@ class AlbumDetailSerializer(serializers.ModelSerializer):
         model = Album
         fields = ["id","name","image","artist","total_songs","genre","songs"]
 
+class AlbumListSerializer(serializers.ModelSerializer):                                           
+    genre = serializers.StringRelatedField()
+    class Meta:
+        model = Album
+        fields = ["id", "name", "image", "genre"]
+
 
 class SubtitleDetailSerializer(serializers.ModelSerializer):
     language = serializers.CharField(source="get_language_display")
@@ -138,6 +144,7 @@ class PlayListCreateUpdateSerializer(serializers.ModelSerializer):
         self.fields.pop("add_songs", None)
         self.fields.pop("remove_songs", None)
         return super().to_representation(instance)
+
 
 class PlayListSerializer(serializers.ModelSerializer):
     songs = SongListSerializer(many=True, read_only=True)

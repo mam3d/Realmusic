@@ -11,10 +11,9 @@ class ArtistListSerializer(serializers.ModelSerializer):
         fields = ["id","name","image"]
 
 
-from music.api.serializers import SongListSerializer
-class ArtistDetailSerializer(serializers.ModelSerializer):
-    
-    albums = serializers.SerializerMethodField()
+from music.api.serializers import SongListSerializer, AlbumListSerializer
+class ArtistDetailSerializer(serializers.ModelSerializer):    
+    albums = AlbumListSerializer(read_only=True, many=True)
     single_songs = serializers.SerializerMethodField()
     class Meta:
         model = Artist
@@ -24,15 +23,6 @@ class ArtistDetailSerializer(serializers.ModelSerializer):
         serializer = SongListSerializer(obj.get_single_songs(),many=True,context=self.context)
         return serializer.data
 
-    def get_albums(self, obj):
-        data = []
-        for album in obj.get_albums():
-            data.append({
-                "id":album.id,
-                "name":album.name,
-                "image":self.context['request'].build_absolute_uri(obj.image.url),
-                })
-        return data
 
 class FollowCreateSerializer(serializers.ModelSerializer):
     class Meta:
