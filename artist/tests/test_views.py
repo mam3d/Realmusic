@@ -28,7 +28,7 @@ class ArtistDetailViewTest(APITestCase):
     def setUp(self):
         genre = GenreFactory(name="Rap")
         self.artist = ArtistFactory(name="nf", genre=genre)
-        song = SongFactory(name="the search")
+        song = SongFactory(name="the search", duration=1.55)
         song.artists.add(self.artist)
         self.url = reverse("artist-detail",kwargs={"pk":self.artist.id})
 

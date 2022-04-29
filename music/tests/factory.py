@@ -21,6 +21,7 @@ class SongFactory(DjangoModelFactory):
     album = None
     genre = None
     download_url = "t.com"
+    duration = None
     class Meta:
         model = Song
 

@@ -34,9 +34,10 @@ class SongDetailViewTest(APITestCase):
         self.album = AlbumFactory(name="the search",artist=self.artist)
         self.genre = GenreFactory(name="Rap")
         self.song = SongFactory(
-            name="the search",
-            album=self.album,
-            genre=self.genre,
+            name = "the search",
+            album = self.album,
+            genre = self.genre,
+            duration = 1.54,
             )
         self.url = reverse("song-detail",kwargs={"pk":self.song.id})
 
@@ -55,7 +56,7 @@ class SongDetailViewTest(APITestCase):
 
 class SubtitleDetailViewTest(APITestCase):
     def setUp(self):
-        self.song = SongFactory(name="the search")
+        self.song = SongFactory(name="the search", duration=1.33)
         self.subtitle = SubtitleFactory(song=self.song)
         self.url = reverse("subtitle-detail", kwargs={"pk":self.subtitle.id})
 
@@ -80,6 +81,7 @@ class AlbumDetailViewTest(APITestCase):
             name="the search",
             album=self.album,
             genre=genre,
+            duration = 1.56,
             )
         self.url = reverse("album-detail",kwargs={"pk":self.album.id})
 
@@ -99,7 +101,7 @@ class AlbumDetailViewTest(APITestCase):
 class ViewCreateViewTest(APITestCase):
     def setUp(self):
         self.user = UserFactory(username="nf")
-        self.song = SongFactory(name="the search")
+        self.song = SongFactory(name="the search", duration=1.55)
         self.url = reverse("view-create")
 
         access = self.user.get_jwt_token()["access"]
@@ -125,7 +127,7 @@ class ViewCreateViewTest(APITestCase):
 class LikeViewTest(APITestCase):
     def setUp(self):
         self.user = UserFactory(username="nf")
-        self.song = SongFactory(name="the search")
+        self.song = SongFactory(name="the search", duration=1.55)
 
         access = self.user.get_jwt_token()["access"]
         self.authorization_header = {"HTTP_AUTHORIZATION":f"Bearer {access}"}
@@ -148,8 +150,8 @@ class LikeViewTest(APITestCase):
 class PlayListViewTest(APITestCase):
     def setUp(self):
         self.user = UserFactory(username="nf")
-        self.song = SongFactory(name="the search")
-        self.song2 = SongFactory(name="song2")
+        self.song = SongFactory(name="the search", duration=1.56)
+        self.song2 = SongFactory(name="song2", duration=1.22)
         self.playlist = PlayListFactory(name="test_playlist",user=self.user)
         self.playlist.songs.add(self.song)
 

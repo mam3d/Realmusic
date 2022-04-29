@@ -23,7 +23,8 @@ from .serializers import (
     AlbumDetailSerializer,
     ViewSerializer,
     PlayListCreateUpdateSerializer,
-    PlayListSerializer,
+    PlayListListSerializer,
+    PlayListDetailSerializer,
     LikeSerializer
 )
 from .filters import SongFilter
@@ -79,9 +80,15 @@ class PlayListView(generics.RetrieveUpdateDestroyAPIView):
     def get_serializer_class(self):
         if self.request.method == "PUT":
             return PlayListCreateUpdateSerializer
-        return PlayListSerializer
+        return PlayListDetailSerializer
 
 
-class PlayListCreateView(generics.CreateAPIView):
-    queryset = PlayList.objects.all()
-    serializer_class = PlayListCreateUpdateSerializer
+class PlayListCreateView(generics.ListCreateAPIView):
+    
+    def get_queryset(self):
+        return PlayList.objects.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return PlayListCreateUpdateSerializer
+        return PlayListListSerializer

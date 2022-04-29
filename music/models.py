@@ -32,7 +32,7 @@ class Album(models.Model):
 
 class Song(models.Model):
     name = models.CharField(max_length=30)
-    image = models.ImageField(upload_to=get_file_path, default="media/music_cover/default.png")
+    image = models.ImageField(upload_to=get_file_path, default="music_cover/default.png")
     artists = models.ManyToManyField(Artist, related_name="songs", blank=False)
     album = models.ForeignKey(Album,
                             related_name="songs",
@@ -85,7 +85,7 @@ class Subtitle(models.Model):
 class View(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     song =  models.ForeignKey(Song, on_delete=models.CASCADE, related_name="views", related_query_name="views")
-    date = models.DateField()
+    date = models.DateField(auto_now_add=True)
     class Meta:
         unique_together = [['user', 'song']]
 

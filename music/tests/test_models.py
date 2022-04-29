@@ -34,7 +34,8 @@ class SongTest(TestCase):
             genre = genre,
             image = image,
             album = album,
-            download_url = "t.com"
+            download_url = "t.com",
+            duration = 1.55,
         )
         view = ViewFactory(song=self.song, user=UserFactory())
         self.song.artists.add(artist)
@@ -42,6 +43,7 @@ class SongTest(TestCase):
     def test_created(self):
         self.assertEqual(self.song.name, "nf")
         self.assertEqual(self.song.download_url, "t.com")
+        self.assertEqual(self.song.duration, 1.55)
         artist = self.song.artists.all()[0]
         self.assertEqual(artist.name, "nf")
         self.assertEqual(self.song.album.name, "the search")
@@ -60,7 +62,7 @@ class SubtitleTest(TestCase):
             with open("test.srt") as mock_f:
                 mock_f.read.return_value = "subtitle text" # value returned to fill in Subtitle.text
 
-                song = SongFactory(name="nf")
+                song = SongFactory(name="nf", duration=1.55)
                 self.subtitle = Subtitle(
                     song = song,
                     file = "test.srt",
@@ -86,7 +88,7 @@ class AlbumTest(TestCase):
             genre = genre,
         )
         self.album.save()
-        self.song = SongFactory(name="the search",album=self.album)
+        self.song = SongFactory(name="the search", album=self.album, duration=1.55)
     
     def test_created(self):
         self.assertEqual(self.album.name, "the search")
@@ -100,7 +102,7 @@ class ViewTest(TestCase):
 
     def setUp(self):
         self.user = UserFactory(username="test")
-        self.song = SongFactory(name="the search")
+        self.song = SongFactory(name="the search", duration=1.55)
         self.view = View.objects.create(user=self.user, song=self.song)
 
     
@@ -116,7 +118,7 @@ class LikeTest(TestCase):
 
     def setUp(self):
         self.user = UserFactory(username="test")
-        self.song = SongFactory(name="the search")
+        self.song = SongFactory(name="the search", duration=1.55)
         self.like = Like.objects.create(user=self.user, song=self.song)
 
     
@@ -133,7 +135,7 @@ class PlayListTest(TestCase):
 
     def setUp(self):
         user = UserFactory(username="test")
-        self.song = SongFactory(name="the search")
+        self.song = SongFactory(name="the search", duration=1.55)
         self.playlist = PlayList.objects.create(name="my-play-list", user=user)
         self.playlist.songs.add(self.song)
 

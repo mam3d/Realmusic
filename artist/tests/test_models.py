@@ -6,7 +6,7 @@ class ArtistTest(TestCase):
 
     def setUp(self):
         self.artist = Artist.objects.create(name="xxx tentacion")
-        self.song = SongFactory(name="the search")
+        self.song = SongFactory(name="the search", duration=1.55)
         self.song.artists.add(self.artist)
         self.album = AlbumFactory(name="the search", artist=self.artist)
 

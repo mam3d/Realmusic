@@ -146,7 +146,7 @@ class PlayListCreateUpdateSerializer(serializers.ModelSerializer):
         return super().to_representation(instance)
 
 
-class PlayListSerializer(serializers.ModelSerializer):
+class PlayListDetailSerializer(serializers.ModelSerializer):
     songs = SongListSerializer(many=True, read_only=True)
     class Meta:
         model = PlayList
@@ -154,3 +154,9 @@ class PlayListSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "user":{"read_only":True},
         }
+
+class PlayListListSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField()
+    class Meta:
+        model = PlayList
+        fields = ["id", "name", "user", "image"]
