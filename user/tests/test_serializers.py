@@ -1,10 +1,11 @@
 from unittest import mock
-from rest_framework.serializers import ValidationError
+from rest_framework import serializers
 from rest_framework.test import APITestCase
 from user.api.serializers import (
     GoogleSerializer,
     RegisterSerializer,
-    LoginSerializer
+    LoginSerializer,
+    PasswordChangeSerializer,
 )
 from .factory import UserFactory
 
@@ -81,4 +82,38 @@ class GoogleSerializerTest(APITestCase):
         mock_requests.get.side_effect = self.get_mock
         
         serializer = GoogleSerializer(data=self.data)
+        self.assertFalse(serializer.is_valid())
+
+
+class PasswordChangeSerializerTest(APITestCase):
+
+    def setUp(self):
+        self.user = UserFactory(username="test", password="testing321")
+        
+    def test_valid(self):
+        payload = {
+            "current_password":"testing321",
+            "new_password":"newpass111",
+            "new_password2":"newpass111",
+        }
+        serializer = PasswordChangeSerializer(self.user, data=payload)
+        self.assertTrue(serializer.is_valid())
+
+    def test_not_valid(self):
+        # wrong current password
+        payload = {
+            "current_password":"testing",
+            "new_password":"newpass111",
+            "new_password2":"newpass111",
+        }
+        serializer = PasswordChangeSerializer(self.user, data=payload)
+        self.assertFalse(serializer.is_valid())
+
+        # new passwords dont match
+        payload = {
+            "current_password":"testing321",
+            "new_password":"newpass",
+            "new_password2":"newpass111",
+        }
+        serializer = PasswordChangeSerializer(self.user, data=payload)
         self.assertFalse(serializer.is_valid())
