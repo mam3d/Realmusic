@@ -10,7 +10,9 @@ from .serializers import (
     RegisterSerializer,
     LoginSerializer,
     GoogleSerializer,
+    PasswordChangeSerializer,
 )
+from ..models import User
 
 
 class UserRegisterView(generics.CreateAPIView):
@@ -31,3 +33,12 @@ class UserLoginView(views.APIView):
         if serializer.is_valid():
             return Response(serializer.validated_data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PasswordChangeView(views.APIView):
+    def post(self, request):
+        serializer = PasswordChangeSerializer(request.user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response("password changed", status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

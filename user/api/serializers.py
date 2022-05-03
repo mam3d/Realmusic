@@ -67,3 +67,29 @@ class GoogleSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         return instance.get_jwt_token()
+
+
+class PasswordChangeSerializer(serializers.Serializer):
+    current_password = serializers.CharField()
+    new_password = serializers.CharField()
+    new_password2 = serializers.CharField()
+
+    def validate_current_password(self, value):
+        user = self.instance
+        if not user.check_password(value):
+            raise serializers.ValidationError("this is not your current password")
+        return value
+
+    def validate(self, data):
+        if data.get("new_password") != data.get("new_password2"):
+            raise serializers.ValidationError({"error":"passwords don't match"})
+
+        if data.get("new_password") == data.get("current_password"):
+            raise serializers.ValidationError({"error":"new password and current password cant be the same"})
+        
+        return data
+
+    def update(self, instance, validated_data):
+        instance.set_password(validated_data.get("new_password"))
+        instance.save()
+        return instance    
