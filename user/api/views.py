@@ -11,6 +11,7 @@ from .serializers import (
     LoginSerializer,
     GoogleSerializer,
     PasswordChangeSerializer,
+    UserUpdateSerializer,
 )
 from ..models import User
 
@@ -20,9 +21,12 @@ class UserRegisterView(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
 
 
-class GoogleLogin(generics.CreateAPIView):
-    serializer_class = GoogleSerializer
-    permission_classes = [permissions.AllowAny]
+class UserUpdateView(generics.UpdateAPIView):
+    serializer_class = UserUpdateSerializer
+    lookup_field = None
+    
+    def get_object(self):
+        return self.request.user
 
 
 class UserLoginView(views.APIView):
@@ -34,6 +38,7 @@ class UserLoginView(views.APIView):
             return Response(serializer.validated_data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class PasswordChangeView(views.APIView):
     def post(self, request):
         serializer = PasswordChangeSerializer(request.user, data=request.data)
@@ -41,4 +46,9 @@ class PasswordChangeView(views.APIView):
             serializer.save()
             return Response("password changed", status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GoogleLogin(generics.CreateAPIView):
+    serializer_class = GoogleSerializer
+    permission_classes = [permissions.AllowAny]
 

@@ -1,8 +1,10 @@
 asgiref==3.5.0
+async-timeout==4.0.2
 certifi==2021.10.8
 charset-normalizer==2.0.12
 coreapi==2.3.3
 coreschema==0.0.4
+Deprecated==1.2.13
 Django==4.0.3
 django-filter==21.1
 djangorestframework==3.13.1
@@ -23,6 +25,7 @@ pyparsing==3.0.7
 python-dateutil==2.8.2
 python-decouple==3.6
 pytz==2021.3
+redis==4.2.2
 requests==2.27.1
 ruamel.yaml==0.17.21
 ruamel.yaml.clib==0.2.6
@@ -30,3 +33,4 @@ six==1.16.0
 sqlparse==0.4.2
 uritemplate==4.1.1
 urllib3==1.26.9
+wrapt==1.14.1

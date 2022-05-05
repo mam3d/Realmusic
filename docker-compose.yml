@@ -37,6 +37,14 @@ services:
     restart: on-failure
     container_name: realmusic_db
 
+  redis:
+    image: redis
+    networks:
+      - realmusic
+    restart: on-failure
+    container_name: redis
+
+
 networks:
   realmusic:
 

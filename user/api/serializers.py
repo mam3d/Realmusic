@@ -1,8 +1,8 @@
-
-from django.contrib.auth import authenticate
 import requests
+from django.contrib.auth import authenticate
 from rest_framework import serializers
 from user.models import User
+from utils.email import Email
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -92,4 +92,31 @@ class PasswordChangeSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         instance.set_password(validated_data.get("new_password"))
         instance.save()
-        return instance    
+        return instance
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["username", "email"]
+        extra_kwargs = {
+            "username":{"required":False}
+        }
+
+    def validate_email(self, value):
+        user = self.context["request"].user
+        email = Email(value, user=user)
+        email = email.send()
+        return email
+
+
+    def to_representation(self, instance):
+        data =  super().to_representation(instance)
+        email = self.validated_data.get("email")
+        if email:
+            data["email"] = f"verification code has been sent to {email}"
+        return data
+
+    def update(self, instance, validated_data):
+        validated_data.pop("email", None)
+        return super().update(instance, validated_data)
