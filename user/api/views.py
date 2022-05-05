@@ -12,8 +12,8 @@ from .serializers import (
     GoogleSerializer,
     PasswordChangeSerializer,
     UserUpdateSerializer,
+    EmailChangeSerializer,
 )
-from ..models import User
 
 
 class UserRegisterView(generics.CreateAPIView):
@@ -23,6 +23,14 @@ class UserRegisterView(generics.CreateAPIView):
 
 class UserUpdateView(generics.UpdateAPIView):
     serializer_class = UserUpdateSerializer
+    lookup_field = None
+    
+    def get_object(self):
+        return self.request.user
+
+
+class EmailChangeView(generics.UpdateAPIView):
+    serializer_class = EmailChangeSerializer
     lookup_field = None
     
     def get_object(self):

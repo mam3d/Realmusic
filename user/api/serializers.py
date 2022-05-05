@@ -1,4 +1,6 @@
+
 import requests
+from django.core.cache import cache
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 from user.models import User
@@ -105,9 +107,10 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     def validate_email(self, value):
         user = self.context["request"].user
-        email = Email(value, user=user)
-        email = email.send()
-        return email
+        if value != user.email:
+            email = Email(value, user=user)
+            email = email.send()
+            return email
 
 
     def to_representation(self, instance):
@@ -120,3 +123,29 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         validated_data.pop("email", None)
         return super().update(instance, validated_data)
+
+
+class EmailChangeSerializer(serializers.Serializer):
+    code = serializers.IntegerField()
+
+    def validate(self, validated_data):
+        user = self.instance
+        data = cache.get(user.username)
+        if data:
+            if data.get("code") != validated_data["code"]:
+                raise serializers.ValidationError({"code":"wrong code"})
+            return data # return cached data
+        raise serializers.ValidationError({"error":"you must first request verification email"})
+    
+    def to_representation(self, instance):
+        return {
+            "user": instance.username,
+            "email":instance.email,
+            }
+
+    def update(self, instance, validated_data):
+        email = validated_data["email"]
+        instance.email = email
+        instance.save()
+        cache.delete(instance.username)
+        return instance

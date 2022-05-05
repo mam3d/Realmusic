@@ -17,8 +17,7 @@ class Email:
         code = random.randint(100000, 1000000)
         if self.user:
             data = {
-                "current":self.user.email,
-                "new":self.email,
+                "email":self.email,
                 "code":code,
             }
             cache.set(self.user, data, 90)
