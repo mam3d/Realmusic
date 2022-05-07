@@ -10,6 +10,8 @@ from .views import (
     UserUpdateView,
     EmailChangeView,
     PasswordChangeView,
+    PasswordResetRequestView,
+    PasswordResetView,
     GoogleLogin,
 )
 
@@ -19,6 +21,8 @@ urlpatterns = [
     path('update/', UserUpdateView.as_view(), name="update"),
     path('email-change/', EmailChangeView.as_view(), name="email_change"),
     path('password-change/', PasswordChangeView.as_view(), name="password_change"),
+    path('password-reset-request/', PasswordResetRequestView.as_view(), name="password_reset_request"),
+    path('password-reset/', PasswordResetView.as_view(), name="password_reset"),
     path('google-login/', GoogleLogin.as_view(), name="google_login"),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

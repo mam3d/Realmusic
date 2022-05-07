@@ -1,5 +1,6 @@
 
 import requests
+from django.core.validators import MinLengthValidator
 from django.core.cache import cache
 from django.contrib.auth import authenticate
 from rest_framework import serializers
@@ -149,3 +150,45 @@ class EmailChangeSerializer(serializers.Serializer):
         instance.save()
         cache.delete(instance.username)
         return instance
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        user = User.objects.filter(email=value)
+        if user.exists():
+            return value
+        else:
+            raise serializers.ValidationError("user with this email dosen't exist")
+
+    def save(self, **kwargs):
+        # send verification email to posted email
+        email = Email(self.validated_data["email"])
+        email = email.send()
+        return email
+
+
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    code = serializers.IntegerField()
+    new_password = serializers.CharField(validators=[MinLengthValidator(8)])
+    new_password2 = serializers.CharField(validators=[MinLengthValidator(8)])
+
+    def validate(self, data):
+        code = cache.get(data["email"])
+        if not code:
+            raise serializers.ValidationError({"error":"you must request verification email first"})
+        if data["new_password"] != data["new_password2"]:
+            raise serializers.ValidationError({"error":"passwords don't match"})
+        if code != data["code"]:
+            raise serializers.ValidationError({"error":"wrong code"})
+        return data
+
+
+    def save(self, **kwargs):
+        password = self.validated_data["new_password"]
+        user = User.objects.get(email=self.validated_data["email"])
+        user.set_password(password)
+        user.save()
+        

@@ -6,11 +6,14 @@ from rest_framework import (
     permissions
 )
 from rest_framework.response import Response
+from .permissions import UnauthenticatedOnly
 from .serializers import (
     RegisterSerializer,
     LoginSerializer,
     GoogleSerializer,
     PasswordChangeSerializer,
+    PasswordResetRequestSerializer,
+    PasswordResetSerializer,
     UserUpdateSerializer,
     EmailChangeSerializer,
 )
@@ -53,6 +56,26 @@ class PasswordChangeView(views.APIView):
         if serializer.is_valid():
             serializer.save()
             return Response("password changed", status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PasswordResetRequestView(views.APIView):
+    permission_classes = [UnauthenticatedOnly]
+    def post(self, request):
+        serializer = PasswordResetRequestSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.save()
+            return Response(f"verification email has been sent to {email}", status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PasswordResetView(views.APIView):
+    permission_classes = [UnauthenticatedOnly]
+    def post(self, request):
+        serializer = PasswordResetSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(f"password changed", status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
