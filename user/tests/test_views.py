@@ -76,3 +76,47 @@ class UserUpdateViewTest(APITestCase):
 
     def test_email_cached(self):
         self.assertTrue(cache.get(self.user.username))
+
+
+class UserUpdateViewTest(APITestCase):
+    def setUp(self):
+        self.url = reverse("update")
+        self.user = UserFactory(username="testuser", password="testing321")
+        self.data = {
+            "username": "newusername",
+            "email": "test@gmail.com",
+        }
+        access = self.user.get_jwt_token()["access"]
+        self.authorization_header = {"HTTP_AUTHORIZATION":f"Bearer {access}"}
+
+    def test_put(self):
+        response = self.client.put(self.url, self.data, **self.authorization_header)
+        self.assertEqual(response.status_code, 200)
+        
+        user = User.objects.get(id=self.user.id)
+        self.assertEqual(user.username, "newusername")
+
+        # test user and verification code cached
+        self.assertTrue(cache.get(self.user.username))
+
+
+
+class EmailChangeViewTest(APITestCase):
+    def setUp(self):
+        self.url = reverse("email_change")
+        self.user = UserFactory(username="testuser", password="testing321")
+        self.payload = {
+            "code":1234,
+        }
+        access = self.user.get_jwt_token()["access"]
+        self.authorization_header = {"HTTP_AUTHORIZATION":f"Bearer {access}"}
+        
+    @mock.patch("user.api.serializers.cache.get")
+    def test_put(self, mock_object):
+        mock_object.return_value = {"email":"s@gmail.com","code":1234}
+        response = self.client.put(self.url, self.payload, **self.authorization_header)
+        user = User.objects.get(id=self.user.id)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(user.email, "s@gmail.com")
+        
