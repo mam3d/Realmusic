@@ -1,6 +1,8 @@
 from unittest import mock
-from django.urls import reverse
 from rest_framework.test import APITestCase
+from django.urls import reverse
+from django.core.cache import cache
+from user.models import User
 from .factory import UserFactory
 
 class UserRegisterViewTest(APITestCase):
@@ -52,3 +54,25 @@ class GoogleLoginViewTest(APITestCase):
 
         response = self.client.post(self.url, self.data)
         self.assertEqual(response.status_code, 201)
+
+class UserUpdateViewTest(APITestCase):
+    def setUp(self):
+        self.url = reverse("update")
+        self.user = UserFactory(username="testuser", password="testing321")
+        self.data = {
+            "username": "newusername",
+            "email": "test@gmail.com",
+        }
+        access = self.user.get_jwt_token()["access"]
+        authorization_header = {"HTTP_AUTHORIZATION":f"Bearer {access}"}
+        self.response = self.client.put(self.url, self.data, **authorization_header)
+
+    def test_post(self):
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_user_updated(self):
+        user = User.objects.get(id=self.user.id)
+        self.assertEqual(user.username, "newusername")
+
+    def test_email_cached(self):
+        self.assertTrue(cache.get(self.user.username))
