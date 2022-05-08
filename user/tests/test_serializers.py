@@ -1,11 +1,14 @@
 from unittest import mock
-from rest_framework import serializers
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIRequestFactory
 from user.api.serializers import (
     GoogleSerializer,
     RegisterSerializer,
     LoginSerializer,
     PasswordChangeSerializer,
+    UserUpdateSerializer,
+    EmailChangeSerializer,
+    PasswordResetRequestSerializer,
+    PasswordResetSerializer,
 )
 from .factory import UserFactory
 
@@ -117,3 +120,95 @@ class PasswordChangeSerializerTest(APITestCase):
         }
         serializer = PasswordChangeSerializer(self.user, data=payload)
         self.assertFalse(serializer.is_valid())
+
+
+class UserUpdateSerializerTest(APITestCase):
+
+    def setUp(self):
+        self.user = UserFactory(username="test", password="testing321")
+        self.request = APIRequestFactory()
+        self.request.user = self.user
+        
+    def test_valid(self):
+        payload = {
+            "username":"newusername",
+            "email":"newusername@gmail.com",
+        }
+        serializer = UserUpdateSerializer(self.user, data=payload, context={"request":self.request})
+        self.assertTrue(serializer.is_valid())
+
+
+class EmailChangeSerializerTest(APITestCase):
+
+    def setUp(self):
+        self.user = UserFactory(username="test", password="testing321")
+    
+    @mock.patch("user.api.serializers.cache")
+    def test_valid(self, mock_object):
+        mock_object.get.return_value = {"code":1245}
+        payload = {
+            "code":1245,
+        }
+        serializer = EmailChangeSerializer(self.user, data=payload)
+        self.assertTrue(serializer.is_valid())
+
+    @mock.patch("user.api.serializers.cache")
+    def test_not_valid(self, mock_object):
+        mock_object.get.return_value = {"code":0000}
+        payload = {
+            "code":1245,
+        }
+        serializer = EmailChangeSerializer(self.user, data=payload)
+        self.assertFalse(serializer.is_valid())
+
+
+class PasswordResetRequestSerializerTest(APITestCase):
+        
+    def test_valid(self):
+        UserFactory(username="test", email="valid@gmail.com")
+        payload = {
+            "email":"valid@gmail.com",
+        }
+        serializer = PasswordResetRequestSerializer(data=payload)
+        self.assertTrue(serializer.is_valid())
+
+    def test_not_valid(self):
+        # user with this email dosen't exist
+        payload = {
+            "email":"notvalid@gmail.com",
+        }
+        serializer = PasswordResetRequestSerializer(data=payload)
+        self.assertFalse(serializer.is_valid())
+
+
+class PasswordResetSerializerTest(APITestCase):
+
+    def setUp(self):
+        self.payload = {
+            "email":"valid@gmail.com",
+            "code":1212,
+            "new_password":"testpass",
+            "new_password2":"testpass"
+        }
+        self.serializer = PasswordResetSerializer(data=self.payload)
+
+    @mock.patch("user.api.serializers.cache")    
+    def test_valid(self, mock_object):
+        mock_object.get.return_value = 1212
+        self.assertTrue(self.serializer.is_valid())
+
+    def test_no_cache_set(self):
+        # cache.get isn't mocked so it dosen't exist
+        self.assertFalse(self.serializer.is_valid())
+
+    @mock.patch("user.api.serializers.cache") 
+    def test_passwords_dont_match(self, mock_object):
+        mock_object.get.return_value = 1212
+        self.payload["new_password2"] = "something diffrent"
+        self.assertFalse(self.serializer.is_valid())
+
+    @mock.patch("user.api.serializers.cache") 
+    def test_wrong_code(self, mock_objcet):
+        mock_objcet.get.return_value = 555
+        self.payload["code"] = 111
+        self.assertFalse(self.serializer.is_valid())
