@@ -110,7 +110,7 @@ class EmailChangeViewTest(APITestCase):
         }
         access = self.user.get_jwt_token()["access"]
         self.authorization_header = {"HTTP_AUTHORIZATION":f"Bearer {access}"}
-        
+
     @mock.patch("user.api.serializers.cache.get")
     def test_put(self, mock_object):
         mock_object.return_value = {"email":"s@gmail.com","code":1234}
@@ -119,4 +119,27 @@ class EmailChangeViewTest(APITestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(user.email, "s@gmail.com")
+
+
+class PasswordResetViewTest(APITestCase):
+    def setUp(self):
+        self.url = reverse("password_reset")
+        self.user = UserFactory(username="testuser", password="mypassword", email="test@gmail.com")
+        self.payload = {
+            "email":"test@gmail.com",
+            "code":1234,
+            "new_password":"newpassword",
+            "new_password2":"newpassword",
+        }
+        
+    @mock.patch("user.api.serializers.cache.get")
+    def test_put(self, mock_object):
+        mock_object.return_value = 1234
+        user = User.objects.get(id=self.user.id)
+        # this view is unauthenticated only
+        response = self.client.post(self.url, self.payload)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(user.check_password("newpassword"))
+        
         
