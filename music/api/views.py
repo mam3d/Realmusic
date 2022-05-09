@@ -45,7 +45,7 @@ class SongListView(generics.ListAPIView):
     serializer_class = SongListSerializer
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = SongFilter
-    pagination_class = pagination.PageNumberPagination
+    pagination_class = pagination.LimitOffsetPagination
 
 
 class SubtitleDetailView(generics.RetrieveAPIView):

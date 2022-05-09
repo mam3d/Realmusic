@@ -135,10 +135,10 @@ class PasswordResetViewTest(APITestCase):
     @mock.patch("user.api.serializers.cache.get")
     def test_put(self, mock_object):
         mock_object.return_value = 1234
-        user = User.objects.get(id=self.user.id)
         # this view is unauthenticated only
         response = self.client.post(self.url, self.payload)
-
+        
+        user = User.objects.get(id=self.user.id)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(user.check_password("newpassword"))
         
