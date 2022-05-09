@@ -1,7 +1,6 @@
-from django.core.paginator import Paginator, InvalidPage
-from rest_framework.settings import api_settings
 from rest_framework import serializers
 from ..models import Artist, Follow
+
 
 
 
@@ -45,22 +44,8 @@ class FollowCreateSerializer(serializers.ModelSerializer):
 
 
 class FollowingSerializer(serializers.ModelSerializer):
-    artist = serializers.StringRelatedField()
-    musics = serializers.SerializerMethodField()
+    artist = ArtistListSerializer()
     class Meta:
         model = Follow
-        fields = ["artist", "musics"]
+        fields = ["id", "artist"]
 
-    def get_musics(self, obj):
-        # order song by views
-        songs = obj.artist.songs.with_views().order_by("-views_count")
-        # paginate by song  because by default following is paginated
-        page_size = api_settings.PAGE_SIZE
-        paginator = Paginator(songs, page_size)
-        page = self.context["request"].query_params.get("page", 1)
-        try:
-            songs = paginator.page(page)
-        except InvalidPage:
-            songs = []
-        serializer = SongListSerializer(songs, many=True, context=self.context)
-        return serializer.data

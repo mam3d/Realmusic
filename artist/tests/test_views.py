@@ -61,7 +61,8 @@ class FollowViewTest(APITestCase):
         response_data = response.data
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response_data[0]["artist"], self.artist.name)
+        self.assertEqual(response_data[0]["artist"]["name"], self.artist.name)
+        self.assertEqual(response_data[0]["artist"]["id"], self.artist.id)
 
     def test_create(self):
         url = reverse("follow")
