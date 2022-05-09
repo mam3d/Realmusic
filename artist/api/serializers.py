@@ -14,16 +14,16 @@ from music.api.serializers import SongListSerializer, AlbumListSerializer
 class ArtistDetailSerializer(serializers.ModelSerializer):    
     albums = AlbumListSerializer(read_only=True, many=True)
     single_songs = serializers.SerializerMethodField()
-    follow = serializers.SerializerMethodField()
+    follow_id = serializers.SerializerMethodField()
     class Meta:
         model = Artist
-        fields = ["name", "image", "follow", "albums", "single_songs"]
+        fields = ["name", "image", "follow_id", "albums", "single_songs"]
 
     def get_single_songs(self, obj):
         serializer = SongListSerializer(obj.get_single_songs(),many=True,context=self.context)
         return serializer.data
 
-    def get_follow(self, obj):
+    def get_follow_id(self, obj):
         # returns id of follow if the viewer user followed this artist else null
         user = self.context["request"].user
         follow = Follow.objects.filter(user=user, artist=obj)

@@ -32,10 +32,20 @@ class SongDetailSerializer(serializers.ModelSerializer):
     artists = ArtistListSerializer(many=True, read_only=True)
     album = serializers.StringRelatedField()
     genre = serializers.StringRelatedField()
+    like_id = serializers.SerializerMethodField()
     class Meta:
         model = Song
-        fields = ["name", "artists", "image", "album", "download_url", "duration", "genre", "subtitles", "total_views", "total_likes"]
+        fields = ["id", "name", "artists", "image", 
+            "album", "download_url", "duration", "genre", 
+            "subtitles", "total_views", "total_likes", "like_id",
+            ]
 
+    def get_like_id(self, obj):
+        # returns id of follow if the viewer user followed this artist else null
+        user = self.context["request"].user
+        like = Like.objects.filter(user=user, song=obj)
+        if like:
+            return like[0].id 
 
 class AlbumDetailSerializer(serializers.ModelSerializer):
     songs =  SongListSerializer(many=True, read_only=True)                                              
