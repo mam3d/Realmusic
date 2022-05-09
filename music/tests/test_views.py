@@ -114,14 +114,6 @@ class ViewCreateViewTest(APITestCase):
         response = self.client.post(self.url, data=payload, **self.authorization_header)
         self.assertEqual(response.status_code, 201)
 
-    def test_fails(self):
-        payload = {
-            "song":self.song.id,           
-            }
-        # already exists
-        ViewFactory(user=self.user,song=self.song)
-        response = self.client.post(self.url, data=payload, **self.authorization_header)
-        self.assertEqual(response.status_code, 400)
 
 
 class LikeViewTest(APITestCase):

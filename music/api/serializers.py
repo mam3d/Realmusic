@@ -64,19 +64,12 @@ class ViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = View
         fields = ["id", "song"]
-    
-    def validate(self, validated_data):
-        user = self.context["request"].user
-        song = validated_data["song"]
-        try:
-            View.objects.get(user=user, song=song)
-        except View.DoesNotExist:
-            return validated_data
-        raise serializers.ValidationError("view with this user and song exists")
 
     def create(self, validated_data):
-        validated_data.update(user=self.context["request"].user)
-        return super().create(validated_data)
+        user = self.context["request"].user
+        song = validated_data["song"]
+        view, created = View.objects.get_or_create(user=user, song=song)
+        return view
 
 
 class LikeSerializer(serializers.ModelSerializer):
@@ -85,18 +78,11 @@ class LikeSerializer(serializers.ModelSerializer):
         fields = ["id", "song"]
         extra_kwargs = {"id":{"read_only":True}}
 
-    def validate(self, validated_data):
+    def create(self, validated_data):
         user = self.context["request"].user
         song = validated_data["song"]
-        try:
-            Like.objects.get(user=user, song=song)
-        except Like.DoesNotExist:
-            return validated_data   
-        raise serializers.ValidationError("like with this user and song exists")
-
-    def create(self, validated_data):
-        validated_data.update(user=self.context["request"].user)
-        return super().create(validated_data)
+        like, created = Like.objects.get_or_create(user=user, song=song)
+        return like
 
 
 class PlayListCreateUpdateSerializer(serializers.ModelSerializer):
