@@ -25,7 +25,8 @@ from .serializers import (
     PlayListCreateUpdateSerializer,
     PlayListListSerializer,
     PlayListDetailSerializer,
-    LikeSerializer
+    LikeCreateSerializer,
+    LikeListSerializer,
 )
 from .filters import SongFilter
 
@@ -63,9 +64,15 @@ class ViewCreateView(generics.CreateAPIView):
     serializer_class = ViewSerializer
 
 
-class LikeCreateView(generics.CreateAPIView):
-    queryset = Like.objects.all()
-    serializer_class = LikeSerializer
+class LikeListCreateView(generics.ListCreateAPIView):
+
+    def get_queryset(self):
+        return Like.objects.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return LikeCreateSerializer
+        return LikeListSerializer
 
 
 class LikeDeleteView(generics.DestroyAPIView):

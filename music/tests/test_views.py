@@ -128,7 +128,7 @@ class LikeViewTest(APITestCase):
         payload = {
             "song":self.song.id,           
             }
-        url = reverse("like-create")
+        url = reverse("like")
         response = self.client.post(url, data=payload, **self.authorization_header)
         self.assertEqual(response.status_code, 201)
 

@@ -82,7 +82,7 @@ class ViewSerializer(serializers.ModelSerializer):
         return view
 
 
-class LikeSerializer(serializers.ModelSerializer):
+class LikeCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = ["id", "song"]
@@ -93,6 +93,12 @@ class LikeSerializer(serializers.ModelSerializer):
         song = validated_data["song"]
         like, created = Like.objects.get_or_create(user=user, song=song)
         return like
+
+class LikeListSerializer(serializers.ModelSerializer):
+    song = SongListSerializer()
+    class Meta:
+        model = Like
+        fields = ["song"]
 
 
 class PlayListCreateUpdateSerializer(serializers.ModelSerializer):
