@@ -1,6 +1,9 @@
-from django.db.models import Manager
+from django.db.models import QuerySet
 from django.db.models import Count
 
-class SongManager(Manager):
+class SongManager(QuerySet):
     def with_views(self):
-        return self.get_queryset().annotate(views_count=Count("views"))
+        return self.annotate(views_count=Count("views"))
+
+    def with_related(self):
+        return self.prefetch_related("views","likes","artists")

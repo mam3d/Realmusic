@@ -2,9 +2,8 @@ from django_filters import rest_framework as filters
 from rest_framework import (
     generics,
     permissions,
-    pagination,
 )
-
+from .paginations import SongPagination
 from .permissions import IsPlayListOwner, IsLikeOwner
 from ..models import (
     Genre,
@@ -42,11 +41,11 @@ class SongDetailView(generics.RetrieveAPIView):
 
 
 class SongListView(generics.ListAPIView):
-    queryset = Song.objects.with_views().order_by("-views_count")
+    queryset = Song.objects.with_related().with_views().order_by("-views_count")
     serializer_class = SongListSerializer
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = SongFilter
-    pagination_class = pagination.LimitOffsetPagination
+    pagination_class = SongPagination
 
 
 class SubtitleDetailView(generics.RetrieveAPIView):

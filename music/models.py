@@ -42,7 +42,7 @@ class Song(models.Model):
     duration = models.FloatField()
     download_url = models.URLField()
     genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)
-    objects = SongManager()
+    objects = SongManager.as_manager()
 
     @property
     def total_views(self):

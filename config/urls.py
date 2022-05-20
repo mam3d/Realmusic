@@ -9,19 +9,24 @@ from drf_yasg import openapi
 
 
 
-schema_view = get_schema_view(
+urlpatterns = [
+   path('admin/', admin.site.urls),
+   path('api/user/', include("user.api.urls")),
+   path('api/artist/', include("artist.api.urls")),
+   path('api/music/', include("music.api.urls")),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG == True:
+   schema_view = get_schema_view(
    openapi.Info(
       title="Realmusic",
       default_version='v1',
    ),
    public=True,
    permission_classes=(AllowAny,),
-)
+   )
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/user/', include("user.api.urls")),
-    path('api/artist/', include("artist.api.urls")),
-    path('api/music/', include("music.api.urls")),
-    path('api/doc/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+   urlpatterns += [
+      path('__debug__/', include('debug_toolbar.urls')),
+      path('api/doc/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+   ]

@@ -30,7 +30,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'django_filters',
-    'drf_yasg',
 
 ]
 SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]
@@ -135,7 +134,7 @@ AUTH_USER_MODEL = "user.User"
 REST_FRAMEWORK = {
     # permissions
     'DEFAULT_PERMISSION_CLASSES':(
-    'rest_framework.permissions.IsAuthenticated',
+    'rest_framework.permissions.AllowAny',
     ),
     # jwt
     'DEFAULT_AUTHENTICATION_CLASSES': (

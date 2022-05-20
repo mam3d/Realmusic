@@ -20,6 +20,7 @@ services:
       - media_volume:/realmusic/media/
     depends_on:
       - db
+      - redis
     restart: on-failure
     image: realmusic:latest
     container_name: realmusic
