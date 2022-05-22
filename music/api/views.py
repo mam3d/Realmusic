@@ -80,7 +80,7 @@ class LikeDeleteView(generics.DestroyAPIView):
 
 
 class PlayListView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = PlayList.objects.all()
+    queryset = PlayList.objects.select_related("user").prefetch_related("songs")
     permission_classes = [IsPlayListOwner, permissions.IsAuthenticated]
 
     def get_serializer_class(self):

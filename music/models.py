@@ -94,16 +94,11 @@ class View(models.Model):
 
 
 class Like(models.Model):
-    id = models.IntegerField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     song =  models.ForeignKey(Song, on_delete=models.CASCADE, related_name="likes", related_query_name="likes")
 
     def __str__(self):
         return f"{self.user}-{self.song} like"
-
-    def save(self, *args, **kwargs):
-        self.id = int(f"{self.user.id}{self.song.id}")
-        return super().save(*args, **kwargs)
     class Meta:
         unique_together = [['user', 'song']]
 

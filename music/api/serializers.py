@@ -158,7 +158,6 @@ class PlayListDetailSerializer(serializers.ModelSerializer):
         }
 
 class PlayListListSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField()
     class Meta:
         model = PlayList
-        fields = ["id", "name", "user", "image"]
+        fields = ["id", "name", "image"]

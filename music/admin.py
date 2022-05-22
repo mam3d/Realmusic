@@ -37,7 +37,7 @@ class SongAdmin(admin.ModelAdmin):
     list_display = ["name", "genre", "download_url", "duration", "total_views", "total_likes"]
     list_filter = ["genre", "artists"]
     raw_id_fields = ("artists",)
-    search_fields = ["name"]
+    search_fields = ["name", "id"]
 
 
 @admin.register(Subtitle)

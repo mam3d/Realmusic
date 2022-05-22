@@ -8,7 +8,6 @@ from .factory import (
     SongFactory,
     AlbumFactory,
     SubtitleFactory,
-    ViewFactory,
     PlayListFactory,
 )
 
@@ -133,8 +132,8 @@ class LikeViewTest(APITestCase):
         self.assertEqual(response.status_code, 201)
 
     def test_delete(self):
-        Like.objects.create(user=self.user, song=self.song)
-        url = reverse("like-delete", kwargs={"pk":int(f"{self.user.id}{self.song.id}")})
+        like = Like.objects.create(user=self.user, song=self.song)
+        url = reverse("like-delete", kwargs={"pk":like.id})
         response = self.client.delete(url, **self.authorization_header)
         self.assertEqual(response.status_code, 204)
 

@@ -8,7 +8,7 @@ class Artist(models.Model):
     genre = models.ForeignKey("music.Genre", on_delete=models.SET_NULL, null=True, blank=True)
 
     def get_songs(self):
-        return self.songs.all()
+        return self.songs.prefetch_related("artists", "views", "likes")
 
     def get_single_songs(self):
         return self.get_songs().filter(album=None)
