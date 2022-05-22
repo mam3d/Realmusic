@@ -9,4 +9,4 @@ class ArtistAdmin(admin.ModelAdmin):
 @admin.register(Follow)
 class FollowAdmin(admin.ModelAdmin):
     list_display = ["user","artist"]
-    exclude = ["id"]
+    raw_id_fields = ["user", "artist"]

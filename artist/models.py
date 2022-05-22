@@ -21,7 +21,6 @@ class Artist(models.Model):
 
 
 class Follow(models.Model):
-    id = models.IntegerField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followings")
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="followers")
 
@@ -30,8 +29,3 @@ class Follow(models.Model):
 
     def __str__(self):
         return f"{self.user}-{self.artist} follow"
-
-    def save(self, *args, **kwargs):
-        self.id = int(f"{self.user.id}{self.artist.id}")
-        return super().save(*args, **kwargs)
-        

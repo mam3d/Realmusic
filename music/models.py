@@ -1,4 +1,4 @@
-
+from django.contrib.postgres.indexes import BrinIndex
 from django.db import models
 from artist.models import Artist
 from user.models import User

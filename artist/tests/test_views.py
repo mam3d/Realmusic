@@ -76,7 +76,7 @@ class FollowViewTest(APITestCase):
         self.assertTrue(Follow.objects.get(user=self.user, artist=artist))
 
     def test_delete(self):
-        url = reverse("follow-delete", kwargs={"pk":int(f"{self.user.id}{self.artist.id}")})
+        url = reverse("follow-delete", kwargs={"pk":self.follow.id})
         response = self.client.delete(url, **self.authorization_header)
 
         self.assertEqual(response.status_code, 204)

@@ -7,6 +7,7 @@ class CustomUserAdmin(UserAdmin):
     list_display = ["username", "email", "is_staff", "is_admin"]
     list_display_links = ('username', 'email')
     list_filter = ("is_staff", "is_superuser", "groups")
+    search_fields = ["username", "email"]
     fieldsets = (
         (None, {
             "fields": (

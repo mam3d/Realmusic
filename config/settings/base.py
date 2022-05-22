@@ -134,7 +134,7 @@ AUTH_USER_MODEL = "user.User"
 REST_FRAMEWORK = {
     # permissions
     'DEFAULT_PERMISSION_CLASSES':(
-    'rest_framework.permissions.AllowAny',
+    'rest_framework.permissions.IsAuthenticated',
     ),
     # jwt
     'DEFAULT_AUTHENTICATION_CLASSES': (
