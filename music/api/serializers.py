@@ -20,11 +20,13 @@ class GenreListSerializer(serializers.ModelSerializer):
 
 class SongListSerializer(serializers.ModelSerializer):
     artists = serializers.StringRelatedField(many=True)
-    total_views = serializers.IntegerField(source="views_count")
+    total_views = serializers.SerializerMethodField()
     class Meta:
         model = Song
         fields = ["id", "name", "artists", "image", "duration", "total_views", "total_likes", "download_url"]
 
+    def get_total_views(self, obj):
+        return obj.views_count if hasattr(obj, "views_count") else obj.total_views
 
 from artist.api.serializers import ArtistListSerializer
 class SongDetailSerializer(serializers.ModelSerializer):
