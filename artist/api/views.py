@@ -2,6 +2,7 @@ from rest_framework import (
     generics,
     permissions,
     viewsets,
+    pagination
 )
 from .filters import ArtistFilter
 from ..models import Artist, Follow
@@ -17,6 +18,7 @@ from .permissions import IsFollowOwner
 class ArtistViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Artist.objects.all()
     filterset_class = ArtistFilter
+    pagination_class = pagination.PageNumberPagination
 
     def get_serializer_class(self):
         if self.action == "list":
