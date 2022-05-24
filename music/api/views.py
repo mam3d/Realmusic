@@ -41,12 +41,11 @@ class SongDetailView(generics.RetrieveAPIView):
 
 
 class SongListView(generics.ListAPIView):
-    queryset = Song.objects.with_related().with_views().order_by("-views_count")
+    queryset = Song.objects.with_prefetch().with_views().order_by("-views_count")
     serializer_class = SongListSerializer
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = SongFilter
     pagination_class = SongPagination
-
 
 class SubtitleDetailView(generics.RetrieveAPIView):
     queryset = Subtitle.objects.all()

@@ -20,8 +20,7 @@ class GenreListSerializer(serializers.ModelSerializer):
 
 class SongListSerializer(serializers.ModelSerializer):
     artists = serializers.StringRelatedField(many=True)
-
-
+    total_views = serializers.IntegerField(source="views_count")
     class Meta:
         model = Song
         fields = ["id", "name", "artists", "image", "duration", "total_views", "total_likes", "download_url"]

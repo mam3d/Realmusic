@@ -5,5 +5,5 @@ class SongManager(QuerySet):
     def with_views(self):
         return self.annotate(views_count=Count("views"))
 
-    def with_related(self):
-        return self.prefetch_related("views","likes","artists")
+    def with_prefetch(self):
+        return self.prefetch_related("artists", "likes")
