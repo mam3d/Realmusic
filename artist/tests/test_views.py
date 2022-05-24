@@ -18,7 +18,7 @@ class ArtistListViewTest(APITestCase):
 
     def test_response(self):
         response = self.client.get(self.url, **self.authorization_header)
-        response_data = response.data[0]
+        response_data = response.data["results"][0]
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response_data["name"], self.artist.name)
         self.assertEqual(response_data["id"], self.artist.id)

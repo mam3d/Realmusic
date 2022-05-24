@@ -18,6 +18,7 @@ class ViewAdmin(admin.ModelAdmin):
 class LikeAdmin(admin.ModelAdmin):
     list_display = ["user","song"]
     exclude = ["id"]
+    raw_id_fields = ["user", "song"]
 
 
 @admin.register(PlayList)
