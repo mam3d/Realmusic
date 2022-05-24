@@ -1,10 +1,9 @@
 from rest_framework import (
-    filters,
     generics,
     permissions,
     viewsets,
 )
-from django_filters.rest_framework import DjangoFilterBackend
+from .filters import ArtistFilter
 from ..models import Artist, Follow
 from .serializers import (
     ArtistListSerializer,
@@ -17,9 +16,7 @@ from .permissions import IsFollowOwner
 
 class ArtistViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Artist.objects.all()
-    filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-    filterset_fields = ["genre"]
-    search_fields = ["name"]
+    filterset_class = ArtistFilter
 
     def get_serializer_class(self):
         if self.action == "list":
