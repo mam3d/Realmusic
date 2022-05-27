@@ -16,14 +16,17 @@ create .env file with following environment variables
 - DATABASE_NAME
 - DATABASE_USER
 - DATABASE_PASSWORD
+- EMAIL_HOST_USER
+- EMAIL_HOST_PASSWORD
 
 Run project
 ```sh
   docker-compose up -d
 ```
-You have 2 containers running
+You have 3 containers running
 - realmusic
 - realmusic_db
+- redis
 
 Create super user with realmusic container to access Django's Admin panel
 ```sh
