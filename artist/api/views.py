@@ -1,9 +1,10 @@
+from django.db.models import Count
 from rest_framework import (
     generics,
     permissions,
     viewsets,
-    pagination
 )
+from .paginations import ArtistPagination
 from .filters import ArtistFilter
 from ..models import Artist, Follow
 from .serializers import (
@@ -16,9 +17,9 @@ from .permissions import IsFollowOwner
 
 
 class ArtistViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Artist.objects.all()
+    queryset = Artist.objects.annotate(total_followers=Count("followers")).order_by("-total_followers")
     filterset_class = ArtistFilter
-    pagination_class = pagination.PageNumberPagination
+    pagination_class = ArtistPagination
 
     def get_serializer_class(self):
         if self.action == "list":
