@@ -12,7 +12,7 @@ class SongFilter(filters.FilterSet):
 
     class Meta:
         model = Song
-        fields = ["name","artist_name"]
+        fields = ["name","artist_name", "genre"]
 
     def top_month_filter(self, queryset, name, value):
         artist_name = self.request.query_params.get("artist_name")

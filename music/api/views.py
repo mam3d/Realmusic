@@ -36,7 +36,7 @@ class GenreListView(generics.ListAPIView):
 
 
 class SongDetailView(generics.RetrieveAPIView):
-    queryset = Song.objects.all()
+    queryset = Song.objects.select_related("album","genre")
     serializer_class = SongDetailSerializer
 
 
