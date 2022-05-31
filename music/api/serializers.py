@@ -15,7 +15,7 @@ from ..models import (
 class GenreListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
-        fields = ["id","name"]
+        fields = ["id", "name", "image"]
 
 
 class SongListSerializer(serializers.ModelSerializer):

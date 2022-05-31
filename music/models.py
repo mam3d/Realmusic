@@ -1,4 +1,4 @@
-from django.contrib.postgres.indexes import BrinIndex
+
 from django.db import models
 from artist.models import Artist
 from user.models import User
@@ -8,6 +8,7 @@ from .managers import SongManager
 
 class Genre(models.Model):
     name = models.CharField(max_length=30)
+    image = models.ImageField(upload_to=get_file_path, default="genre/default.png")
 
     def __str__(self):
         return self.name
@@ -15,7 +16,7 @@ class Genre(models.Model):
 
 class Album(models.Model):
     name = models.CharField(max_length=30)
-    image = models.ImageField(upload_to=get_file_path, default="album_cover/default.png")
+    image = models.ImageField(upload_to=get_file_path, default="album/default.png")
     artist = models.ForeignKey(Artist, related_name="albums", on_delete=models.CASCADE)
     genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -32,7 +33,7 @@ class Album(models.Model):
 
 class Song(models.Model):
     name = models.CharField(max_length=30)
-    image = models.ImageField(upload_to=get_file_path, default="music_cover/default.png")
+    image = models.ImageField(upload_to=get_file_path, default="music/default.png")
     artists = models.ManyToManyField(Artist, related_name="songs", blank=False)
     album = models.ForeignKey(Album,
                             related_name="songs",
