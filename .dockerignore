@@ -1,3 +1,4 @@
-.media
-.venv
-.git
+.media/*
+.venv/*
+.git/*
+.static/*
