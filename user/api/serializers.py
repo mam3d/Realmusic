@@ -65,7 +65,7 @@ class GoogleSerializer(serializers.Serializer):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            user = User(email=email)
+            user = User(email=email).save()
         return user
 
     def to_representation(self, instance):

@@ -74,7 +74,7 @@ DATABASES = {
         'NAME': config("DATABASE_NAME", cast=str),
         'USER': config("DATABASE_USER", cast=str),
         'PASSWORD': config("DATABASE_PASSWORD", cast=str),
-        'HOST': 'db',
+        'HOST': config("DATABASE_HOST", cast=str),
     }
 }
 
