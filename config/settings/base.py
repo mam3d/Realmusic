@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'django_filters',
+    'dbbackup',
 
 ]
 SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]
@@ -159,3 +160,8 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = config("EMAIL_HOST_USER", cast=str)
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", cast=str)
 
+# backup settings
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': os.path.join(BASE_DIR, "backups")}
+DBBACKUP_FILENAME_TEMPLATE = 'realmusic-{datetime}.{extension}'
+DBBACKUP_MEDIA_FILENAME_TEMPLATE = 'realmusic-media-{datetime}.{extension}'

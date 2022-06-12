@@ -27,7 +27,7 @@ services:
     container_name: realmusic
 
   db:
-    image: postgres
+    image: postgres:13.1
     networks:
       - realmusic
     volumes:
