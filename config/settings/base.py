@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'django_filters',
     'dbbackup',
+    'django_crontab',
 
 ]
 SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]
@@ -165,3 +166,8 @@ DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DBBACKUP_STORAGE_OPTIONS = {'location': os.path.join(BASE_DIR, "backups")}
 DBBACKUP_FILENAME_TEMPLATE = 'realmusic-{datetime}.{extension}'
 DBBACKUP_MEDIA_FILENAME_TEMPLATE = 'realmusic-media-{datetime}.{extension}'
+
+CRONJOBS = [
+    # every week at 00:00
+    ('0 0 */7 * *', 'config.cron.backup'),
+]

@@ -10,8 +10,13 @@ services:
     networks:
       - realmusic
     command: >
-      sh -c "python manage.py migrate &&
+      sh -c "
+             service cron start && 
+             python manage.py crontab add &&
+             python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
              gunicorn config.wsgi:application -w 2 -b 0.0.0.0:8000
+             
             "
     ports:
       - 8000:8000
