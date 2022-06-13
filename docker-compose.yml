@@ -38,9 +38,9 @@ services:
     volumes:
       - postgres_db:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=${DATABASE_NAME}
-      - POSTGRES_USER=${DATABASE_USER}
-      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=realmusic
+      - POSTGRES_USER=mam3d
+      - POSTGRES_PASSWORD=testing321
     restart: on-failure
     container_name: realmusic_db
 

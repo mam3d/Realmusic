@@ -13,9 +13,7 @@ Clone the project
 ```
 create .env file with following environment variables
 - SECRET_KEY
-- DATABASE_NAME
-- DATABASE_USER
-- DATABASE_PASSWORD
+- DATABASE_URL (should match with enviroment variables set for database in docker-compose file)
 - EMAIL_HOST_USER
 - EMAIL_HOST_PASSWORD
 
