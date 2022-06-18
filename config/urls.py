@@ -10,7 +10,7 @@ from drf_yasg import openapi
 
 
 urlpatterns = [
-   path('admin/', admin.site.urls),
+   path('modiriat/', admin.site.urls),
    path('api/user/', include("user.api.urls")),
    path('api/artist/', include("artist.api.urls")),
    path('api/music/', include("music.api.urls")),

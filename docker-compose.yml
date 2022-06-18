@@ -9,17 +9,8 @@ services:
       - .env
     networks:
       - realmusic
-    command: >
-      sh -c "
-             service cron start && 
-             python manage.py crontab add &&
-             python manage.py migrate &&
-             python manage.py collectstatic --noinput &&
-             gunicorn config.wsgi:application -w 2 -b 0.0.0.0:8000
-             
-            "
     ports:
-      - 8000:8000
+      - 80:80
     volumes:
       - .:/realmusic
       - media_volume:/realmusic/media/
@@ -51,20 +42,20 @@ services:
     restart: on-failure
     container_name: redis
   
-  nginx:
-    build: 
-      context: ./nginx
-    networks:
-      - realmusic
-    ports:
-      - 1300:80
-    restart: on-failure
-    container_name: nginx
-    volumes:
-      - media_volume:/realmusic/media/
-      - static_volume:/realmusic/static/
-    depends_on:
-      - realmusic
+  # nginx:
+  #   build: 
+  #     context: ./nginx
+  #   networks:
+  #     - realmusic
+  #   ports:
+  #     - 1300:80
+  #   restart: on-failure
+  #   container_name: nginx
+  #   volumes:
+  #     - media_volume:/realmusic/media/
+  #     - static_volume:/realmusic/static/
+  #   depends_on:
+  #     - realmusic
 
 
 networks:

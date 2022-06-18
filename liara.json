@@ -1,0 +1,28 @@
+{
+    "disks": [
+      {
+        "name": "settings-and-static",
+        "mountTo": "/realmusic/static"
+      },
+      {
+        "name": "media",
+        "mountTo": "/realmusic/media"
+      },
+      {
+        "name": "backups",
+        "mountTo": "/realmusic/backups"
+      },
+      {
+        "name": "settings-and-static",
+        "mountTo": "/var/lib/nginx"
+      },
+      {
+        "name": "settings-and-static",
+        "mountTo": "/var/log/nginx"
+      },
+      {
+        "name": "settings-and-static",
+        "mountTo": "/var/spool/cron/"
+      }
+    ]
+  }

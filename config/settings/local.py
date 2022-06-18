@@ -2,7 +2,7 @@ from .base import *
 
 
 DEBUG = True
-CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:1300"]
+CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1"]
 
 # settings for django-debug-toolbar
 INSTALLED_APPS += ["debug_toolbar", "drf_yasg"]
