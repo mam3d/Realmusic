@@ -12,11 +12,9 @@ WORKDIR /realmusic
 COPY --from=builder /venv /venv
 ENV PATH="/venv/bin:$PATH"
 RUN apt-get update && \
-    apt-get -y install sudo && \
     apt-get -y install postgresql-client && \
     apt-get -y install cron && \
-    apt-get -y install nginx && \
-    apt-get -y install sudo
+    apt-get -y install nginx
 
 ADD . .
 # edit default file with custom nginx config

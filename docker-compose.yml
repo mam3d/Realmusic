@@ -3,14 +3,16 @@ services:
   realmusic:
     build: 
       context: .
-      dockerfile: Dockerfile
+      dockerfile: dev.Dockerfile
       network: host
+    command: >
+      sh -c "python manage.py migrate && gunicorn config.wsgi:application -w 2 -b 0.0.0.0:8000 --reload"
     env_file:
       - .env
     networks:
       - realmusic
     ports:
-      - 80:80
+      - 8000:8000
     volumes:
       - .:/realmusic
       - media_volume:/realmusic/media/
@@ -42,20 +44,20 @@ services:
     restart: on-failure
     container_name: redis
   
-  # nginx:
-  #   build: 
-  #     context: ./nginx
-  #   networks:
-  #     - realmusic
-  #   ports:
-  #     - 1300:80
-  #   restart: on-failure
-  #   container_name: nginx
-  #   volumes:
-  #     - media_volume:/realmusic/media/
-  #     - static_volume:/realmusic/static/
-  #   depends_on:
-  #     - realmusic
+  nginx:
+    build: 
+      context: ./nginx
+    networks:
+      - realmusic
+    ports:
+      - 80:80
+    restart: on-failure
+    container_name: nginx
+    volumes:
+      - media_volume:/realmusic/media/
+      - static_volume:/realmusic/static/
+    depends_on:
+      - realmusic
 
 
 networks:

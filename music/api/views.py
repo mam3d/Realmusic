@@ -21,7 +21,8 @@ from .serializers import (
     SubtitleDetailSerializer,
     AlbumDetailSerializer,
     ViewSerializer,
-    PlayListCreateUpdateSerializer,
+    PlayListUpdateSerializer,
+    PlayListCreateSerializer,
     PlayListListSerializer,
     PlayListDetailSerializer,
     LikeCreateSerializer,
@@ -81,12 +82,11 @@ class LikeDeleteView(generics.DestroyAPIView):
 class PlayListView(generics.RetrieveUpdateDestroyAPIView):
     queryset = PlayList.objects.select_related("user").prefetch_related("songs")
     permission_classes = [IsPlayListOwner, permissions.IsAuthenticated]
-
+        
     def get_serializer_class(self):
         if self.request.method == "PUT":
-            return PlayListCreateUpdateSerializer
+            return PlayListUpdateSerializer
         return PlayListDetailSerializer
-
 
 class PlayListCreateView(generics.ListCreateAPIView):
     
@@ -95,5 +95,5 @@ class PlayListCreateView(generics.ListCreateAPIView):
 
     def get_serializer_class(self):
         if self.request.method == "POST":
-            return PlayListCreateUpdateSerializer
+            return PlayListCreateSerializer
         return PlayListListSerializer
