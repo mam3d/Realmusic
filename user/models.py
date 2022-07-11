@@ -8,7 +8,7 @@ from django.contrib.auth.models import (
 )
 
 class UserManager(BaseUserManager):
-    def create(self, username, password, **kwargs):
+    def create(self, username=None, password=None, **kwargs):
         user = self.model(username=username, **kwargs)
         user.set_password(password)
         user.save()
@@ -26,7 +26,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=30, unique=True)
+    username = models.CharField(max_length=30, unique=True, null=True)
     email = models.EmailField(unique=True, null=True, blank=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
@@ -46,5 +46,5 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         if self.email:
-            return self.username
+            return self.email
         return self.username

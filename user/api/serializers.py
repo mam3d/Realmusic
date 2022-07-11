@@ -62,10 +62,7 @@ class GoogleSerializer(serializers.Serializer):
     def create(self, validated_data):
         # email returned from validate_token()
         email = validated_data["token"]
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            user = User(email=email).save()
+        user, created = User.objects.get_or_create(email=email)
         return user
 
     def to_representation(self, instance):
